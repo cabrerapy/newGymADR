@@ -1,0 +1,26 @@
+{
+  "name": "adr-cross-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "API local de ADR Cross",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "node dist/main.js",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "initialize:dynamodb:local": "tsx scripts/initialize-dynamodb-local.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1152.0"
+  }
+}

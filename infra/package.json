@@ -1,0 +1,25 @@
+{
+  "name": "adr-cross-infra",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Infraestructura AWS CDK de ADR Cross",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "synth": "cdk synth --no-lookups",
+    "test": "node --import tsx --test test/*.test.ts"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.273.0",
+    "constructs": "^10.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "aws-cdk": "^2.1145.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}

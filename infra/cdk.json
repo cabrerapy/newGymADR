@@ -1,0 +1,9 @@
+{
+  "app": "npx tsx bin/adr-cross-infra.ts",
+  "output": "cdk.out",
+  "context": {
+    "project": "adr-cross",
+    "phase": "np-002",
+    "environment": "local"
+  }
+}
