@@ -1,10 +1,12 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { PublicShellComponent } from './public/layout/public-shell.component';
 
 @Component({
   selector: 'app-root',
-  styleUrl: './app.css',
+  standalone: true,
+  imports: [PublicShellComponent],
   templateUrl: './app.html',
+  styleUrl: './app.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class App {
-  protected readonly title = signal('ADR Cross');
-}
+export class App {}

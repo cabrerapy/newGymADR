@@ -1,0 +1,16 @@
+<div class="flex min-h-screen flex-col bg-adr-black text-adr-white">
+  <a
+    href="#contenido-principal"
+    class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-adr-gold focus:px-4 focus:py-2 focus:text-adr-black focus:font-bold"
+  >
+    Saltar al contenido
+  </a>
+
+  <app-site-header />
+
+  <main id="contenido-principal" class="flex-1" tabindex="-1">
+    <router-outlet />
+  </main>
+
+  <app-site-footer />
+</div>

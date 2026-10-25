@@ -1,0 +1,39 @@
+<section class="bg-adr-black" aria-labelledby="info-page-title">
+  <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <nav aria-label="Migas de pan" class="mb-10 text-sm">
+      <ol class="flex flex-wrap items-center gap-2 text-white/60">
+        <li>
+          <a routerLink="/" class="hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold">
+            Inicio
+          </a>
+        </li>
+        <li aria-hidden="true">/</li>
+        <li class="text-adr-gold" aria-current="page">{{ title }}</li>
+      </ol>
+    </nav>
+
+    <p class="text-sm font-bold uppercase tracking-[0.2em] text-adr-gold">Contenido público</p>
+    <h1 id="info-page-title" class="mt-4 text-4xl font-black leading-tight text-adr-white sm:text-5xl">
+      {{ title }}
+    </h1>
+    <p class="mt-6 max-w-2xl text-base leading-7 text-white/75 sm:text-lg">
+      {{ description }}
+    </p>
+
+    <div class="mt-10 rounded-lg border border-adr-olive/40 bg-adr-olive/20 p-5 sm:p-6">
+      <h2 class="text-lg font-bold text-adr-white">En construcción</h2>
+      <p class="mt-2 text-sm leading-6 text-white/65">
+        Esta sección forma parte de la fundación del portal público y se completará en entregas posteriores.
+      </p>
+    </div>
+
+    <div class="mt-10">
+      <a
+        routerLink="/contacto"
+        class="inline-flex min-h-11 items-center justify-center rounded-md bg-adr-gold px-5 py-3 text-sm font-bold text-adr-black transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold"
+      >
+        Contacto
+      </a>
+    </div>
+  </div>
+</section>

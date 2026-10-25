@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+.active-nav-link {
+  color: var(--color-adr-gold);
+  background-color: rgb(255 255 255 / 0.06);
+}

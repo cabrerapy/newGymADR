@@ -1,22 +1,23 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 
-  it('should create the app', () => {
+  it('should create the application', () => {
     const fixture = TestBed.createComponent(App);
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should render the ADR Cross heading', () => {
+  it('should render the public shell', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
-    const heading = fixture.nativeElement.querySelector('h1');
-    expect(heading?.textContent).toContain('Entrena con propósito');
+    expect(fixture.nativeElement.querySelector('app-public-shell')).toBeTruthy();
   });
 });

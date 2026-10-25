@@ -1,0 +1,60 @@
+<footer class="border-t border-adr-olive/30 bg-adr-deep">
+  <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div class="grid gap-10 lg:grid-cols-[1.2fr_1fr_1fr]">
+      <div>
+        <a
+          routerLink="/"
+          class="inline-block text-lg font-black uppercase tracking-[0.18em] text-adr-white hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold"
+          aria-label="ADR Cross - inicio"
+        >
+          ADR CROSS
+        </a>
+        <p class="mt-3 max-w-sm text-sm leading-6 text-white/65">
+          Portal público de ADR Cross.
+        </p>
+      </div>
+
+      <nav aria-labelledby="footer-navigation-title">
+        <h2 id="footer-navigation-title" class="text-sm font-bold uppercase tracking-[0.16em] text-adr-gold">
+          Explorar
+        </h2>
+        <ul class="mt-4 space-y-2">
+          @for (item of navigationItems; track item.path) {
+            <li>
+              <a
+                [routerLink]="item.path"
+                routerLinkActive="active-nav-link"
+                [ariaCurrentWhenActive]="'page'"
+                class="inline-flex min-h-9 items-center text-sm text-white/75 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold"
+              >
+                {{ item.label }}
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
+
+      <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-1">
+        <section aria-labelledby="footer-social-title">
+          <h2 id="footer-social-title" class="text-sm font-bold uppercase tracking-[0.16em] text-adr-gold">
+            Redes sociales
+          </h2>
+          <p class="mt-3 text-sm leading-6 text-white/65">Espacio reservado para canales verificados.</p>
+        </section>
+
+        <section aria-labelledby="footer-contact-title">
+          <h2 id="footer-contact-title" class="text-sm font-bold uppercase tracking-[0.16em] text-adr-gold">
+            Contacto
+          </h2>
+          <p class="mt-3 text-sm leading-6 text-white/65">Información de contacto pendiente de verificación.</p>
+        </section>
+      </div>
+    </div>
+
+    <div class="mt-10 border-t border-white/10 pt-6">
+      <p class="text-xs leading-5 text-white/50">
+        © {{ year }} ADR CROSS. Todos los derechos reservados.
+      </p>
+    </div>
+  </div>
+</footer>

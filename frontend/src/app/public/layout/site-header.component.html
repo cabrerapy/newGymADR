@@ -1,0 +1,64 @@
+<header class="sticky top-0 z-40 border-b border-adr-olive/30 bg-adr-deep/95 backdrop-blur">
+  <div class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+    <a
+      routerLink="/"
+      class="shrink-0 text-lg font-black uppercase tracking-[0.18em] text-adr-white hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold"
+      aria-label="ADR Cross - inicio"
+    >
+      ADR CROSS
+    </a>
+
+    <nav class="hidden items-center gap-1 md:flex" aria-label="Navegación principal">
+      @for (item of navigationItems; track item.path) {
+        <a
+          [routerLink]="item.path"
+          [routerLinkActiveOptions]="item.exact ? { exact: true } : { exact: false }"
+          routerLinkActive="active-nav-link"
+          [ariaCurrentWhenActive]="'page'"
+          class="rounded-sm border-b-2 border-transparent px-3 py-2 text-sm font-semibold text-white/75 transition hover:border-transparent hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold"
+        >
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a
+        routerLink="/acceso-alumnos"
+        routerLinkActive="active-nav-link"
+        [ariaCurrentWhenActive]="'page'"
+        class="inline-flex min-h-10 items-center justify-center rounded-md bg-adr-gold px-3 py-2 text-sm font-bold text-adr-black transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold"
+      >
+        <span class="hidden sm:inline">Acceso alumnos</span>
+        <span class="sm:hidden">Alumnos</span>
+      </a>
+
+      <button
+        #menuTrigger
+        id="menu-trigger"
+        type="button"
+        class="inline-flex md:hidden min-h-10 w-10 items-center justify-center rounded-md border border-white/20 text-adr-white hover:border-adr-gold hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold"
+        [attr.aria-expanded]="menuOpen()"
+        aria-controls="mobile-navigation"
+        [attr.aria-label]="menuOpen() ? 'Cerrar menú' : 'Abrir menú'"
+        (click)="toggleMenu()"
+      >
+        <span class="sr-only">{{ menuOpen() ? 'Cerrar menú' : 'Abrir menú' }}</span>
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M4 7h16M4 12h16M4 17h16"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <app-mobile-navigation
+    [open]="menuOpen()"
+    [navigationItems]="navigationItems"
+    (closeRequested)="closeMenu()"
+  />
+</header>
