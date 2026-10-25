@@ -1,0 +1,28 @@
+:host {
+  display: block;
+}
+
+.schedule-visual {
+  isolation: isolate;
+}
+
+.schedule-visual::before {
+  position: absolute;
+  inset: 18%;
+  z-index: -1;
+  border: 1px solid rgba(199, 162, 74, 0.16);
+  content: "";
+  transform: rotate(18deg);
+}
+
+.schedule-visual::after {
+  position: absolute;
+  top: 50%;
+  left: 12%;
+  z-index: -1;
+  width: 76%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(199, 162, 74, 0.55), transparent);
+  content: "";
+  transform: rotate(-24deg);
+}

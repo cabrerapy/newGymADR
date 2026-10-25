@@ -63,6 +63,18 @@ describe('Rutas públicas', () => {
     );
   });
 
+  it('renderiza las páginas dedicadas de horarios y actividades', async () => {
+    const harness = await RouterTestingHarness.create('/horarios');
+
+    expect(harness.routeNativeElement?.textContent).toContain('Horarios pendientes de publicación');
+    expect(harness.routeNativeElement?.textContent).toContain('America/Asuncion');
+
+    await harness.navigateByUrl('/actividades');
+    expect(harness.routeNativeElement?.textContent).toContain('Próximos eventos');
+    expect(harness.routeNativeElement?.textContent).toContain('Inscripciones cerradas');
+    expect(harness.routeNativeElement?.textContent).toContain('Eventos finalizados');
+  });
+
   it('renderiza las páginas dedicadas de gimnasio y entrenadores', async () => {
     const harness = await RouterTestingHarness.create('/');
 

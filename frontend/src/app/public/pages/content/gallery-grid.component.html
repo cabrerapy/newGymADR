@@ -1,0 +1,17 @@
+@if (items.length) {
+  <ul class="gallery-grid" aria-label="Galería de instalaciones">
+    @for (item of items; track item.id; let itemIndex = $index) {
+      <li><app-gallery-item [item]="item" [index]="itemIndex" /></li>
+    }
+  </ul>
+} @else {
+  <div
+    class="rounded-xl border border-dashed border-adr-olive/50 bg-adr-gray-dark/40 p-8 text-center sm:p-12"
+    role="status"
+    aria-labelledby="gallery-empty-title"
+  >
+    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-adr-gold/40 text-2xl text-adr-gold" aria-hidden="true">+</div>
+    <h3 id="gallery-empty-title" class="mt-6 text-2xl font-black text-adr-white sm:text-3xl">{{ emptyTitle }}</h3>
+    <p class="mx-auto mt-4 max-w-xl text-sm leading-7 text-white/65">{{ emptyDescription }}</p>
+  </div>
+}

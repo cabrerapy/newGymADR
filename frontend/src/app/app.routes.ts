@@ -3,21 +3,6 @@ import { PublicShellComponent } from './public/layout/public-shell.component';
 
 const infoPages = [
   {
-    path: 'instalaciones',
-    title: 'Instalaciones',
-    description: 'Consulta la sección pública dedicada a las instalaciones.',
-  },
-  {
-    path: 'horarios',
-    title: 'Horarios',
-    description: 'Consulta la sección pública dedicada a los horarios informativos.',
-  },
-  {
-    path: 'actividades',
-    title: 'Actividades',
-    description: 'Consulta la sección pública dedicada a competencias y actividades.',
-  },
-  {
     path: 'contacto',
     title: 'Contacto',
     description: 'Consulta la sección pública dedicada a los canales de contacto verificados.',
@@ -50,6 +35,42 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./public/pages/gym/gym-page.component').then(
             (component) => component.GymPageComponent,
+          ),
+      },
+      {
+        path: 'instalaciones',
+        title: 'Instalaciones',
+        data: {
+          title: 'Instalaciones',
+          description: 'Conoce los espacios, el equipamiento y la galería oficial de ADR Cross.',
+        },
+        loadComponent: () =>
+          import('./public/pages/facilities/facilities-page.component').then(
+            (component) => component.FacilitiesPageComponent,
+          ),
+      },
+      {
+        path: 'horarios',
+        title: 'Horarios',
+        data: {
+          title: 'Horarios',
+          description: 'Consulta los horarios informativos y la organización semanal de ADR Cross.',
+        },
+        loadComponent: () =>
+          import('./public/pages/schedules/schedules-page.component').then(
+            (component) => component.SchedulesPageComponent,
+          ),
+      },
+      {
+        path: 'actividades',
+        title: 'Actividades',
+        data: {
+          title: 'Actividades',
+          description: 'Consulta las competencias y actividades oficiales de ADR Cross.',
+        },
+        loadComponent: () =>
+          import('./public/pages/activities/activities-page.component').then(
+            (component) => component.ActivitiesPageComponent,
           ),
       },
       ...infoPages.map((page) => ({

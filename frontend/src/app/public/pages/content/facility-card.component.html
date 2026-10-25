@@ -1,0 +1,22 @@
+<article
+  class="flex h-full flex-col rounded-xl border border-adr-olive/40 bg-adr-black/40 p-6 shadow-lg shadow-black/10"
+  [attr.aria-labelledby]="'facility-title-' + facility.id"
+>
+  <div class="flex items-start justify-between gap-4">
+    <span class="rounded-full border border-adr-gold/40 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-adr-gold">
+      {{ categoryLabel[facility.category] }}
+    </span>
+    @if (facility.status === 'pending-validation') {
+      <span class="rounded-full border border-white/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-white/60">
+        Pendiente
+      </span>
+    }
+  </div>
+  <h3 [id]="'facility-title-' + facility.id" class="mt-6 text-xl font-black text-adr-white">
+    {{ facility.title }}
+  </h3>
+  <p class="mt-4 text-sm leading-6 text-white/65">{{ facility.description }}</p>
+  <p class="mt-6 text-xs font-semibold uppercase tracking-[0.12em] text-adr-olive-mid">
+    Información editable
+  </p>
+</article>

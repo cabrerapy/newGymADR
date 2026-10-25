@@ -1,0 +1,57 @@
+<article
+  class="flex h-full flex-col overflow-hidden rounded-xl border border-adr-olive/40 bg-adr-gray-dark/60"
+  [attr.aria-labelledby]="'activity-title-' + activity.id"
+>
+  @if (activity.image?.status === 'approved' && activity.image.src) {
+    <div class="aspect-[16/9] overflow-hidden bg-adr-black">
+      <img
+        [ngSrc]="activity.image.src"
+        [alt]="activity.image.alt"
+        [width]="activity.image.width"
+        [height]="activity.image.height"
+        loading="lazy"
+        class="h-full w-full object-cover"
+      />
+    </div>
+  } @else {
+    <div
+      class="activity-placeholder aspect-[16/9] flex items-center justify-center"
+      role="img"
+      [attr.aria-label]="'Imagen de ' + activity.title + ' pendiente de validación'"
+    >
+      <svg class="h-12 w-12 text-adr-gold/80" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 5h16v14H4z" stroke="currentColor" stroke-width="1.5" />
+        <path d="M8 3v4M16 3v4M4 10h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        <path d="m4 16 4.2-4.2 3.2 3.2 2.5-2.5L20 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+  }
+
+  <div class="flex flex-1 flex-col p-5 sm:p-6">
+    <div class="flex flex-wrap items-start justify-between gap-3">
+      <span class="rounded-full border border-adr-gold/40 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-adr-gold">
+        {{ statusLabel[activity.status] }}
+      </span>
+      @if (activity.category) {
+        <span class="rounded-full border border-white/15 px-2.5 py-1 text-[11px] font-semibold text-white/65">
+          {{ activity.category.label }}
+        </span>
+      }
+    </div>
+    <h3 [id]="'activity-title-' + activity.id" class="mt-4 text-xl font-black text-adr-white">
+      {{ activity.title }}
+    </h3>
+    @if (activity.startsAt) {
+      <p class="mt-3 text-sm font-semibold text-adr-gold">
+        <time [attr.datetime]="activity.startsAt">{{ activity.startsAt }}</time>
+        @if (activity.endsAt) {
+          <span> · <time [attr.datetime]="activity.endsAt">{{ activity.endsAt }}</time></span>
+        }
+      </p>
+    }
+    <p class="mt-3 text-sm leading-6 text-white/65">{{ activity.description }}</p>
+    @if (activity.registrationNote) {
+      <p class="mt-4 text-xs leading-5 text-white/55">{{ activity.registrationNote }}</p>
+    }
+  </div>
+</article>

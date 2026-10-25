@@ -1,0 +1,169 @@
+<section class="bg-adr-black" aria-labelledby="schedules-title">
+  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+    <nav aria-label="Migas de pan" class="mb-10 text-sm">
+      <ol class="flex flex-wrap items-center gap-2 text-white/60">
+        <li><a routerLink="/" class="hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold">Inicio</a></li>
+        <li aria-hidden="true">/</li>
+        <li class="text-adr-gold" aria-current="page">Horarios</li>
+      </ol>
+    </nav>
+
+    <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+      <div>
+        <p class="text-sm font-bold uppercase tracking-[0.22em] text-adr-gold">{{ page.hero.eyebrow }}</p>
+        <h1 id="schedules-title" class="mt-4 text-5xl font-black leading-[0.95] text-adr-white sm:text-6xl lg:text-7xl">{{ page.hero.title }}</h1>
+        <p class="mt-7 max-w-2xl text-base leading-7 text-white/75 sm:text-lg">{{ page.hero.intro }}</p>
+        <div class="mt-7 flex flex-wrap items-center gap-3">
+          <span class="rounded-full border border-adr-gold/40 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-adr-gold">{{ statusLabel(page.status) }}</span>
+          <a routerLink="/contacto" class="inline-flex min-h-11 items-center justify-center rounded-md bg-adr-gold px-5 py-3 text-sm font-bold text-adr-black transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold">Contacto</a>
+          <a routerLink="/acceso-alumnos" class="inline-flex min-h-11 items-center justify-center rounded-md border border-adr-gold/50 px-5 py-3 text-sm font-bold text-adr-gold transition hover:bg-adr-gold hover:text-adr-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold">Acceso alumnos</a>
+        </div>
+      </div>
+
+      <div class="relative mx-auto w-full max-w-lg" aria-hidden="true">
+        <div class="schedule-visual relative isolate aspect-square overflow-hidden rounded-2xl border border-adr-olive/40 bg-adr-deep shadow-2xl shadow-black/30">
+          <div class="absolute inset-0 bg-[linear-gradient(135deg,rgba(199,162,74,0.14),transparent_42%),repeating-linear-gradient(45deg,rgba(255,255,255,0.035)_0,rgba(255,255,255,0.035)_1px,transparent_1px,transparent_16px)]"></div>
+          <div class="absolute left-8 top-8 h-24 w-24 rounded-full border border-adr-gold/30"></div>
+          <div class="absolute bottom-10 right-8 h-32 w-32 rounded-full border border-adr-olive-mid/35"></div>
+          <div class="absolute inset-x-8 bottom-10 border-t border-adr-gold/50"></div>
+          <div class="absolute bottom-16 left-8">
+            <p class="text-xs font-bold uppercase tracking-[0.22em] text-adr-gold">Semana por confirmar</p>
+            <p class="mt-2 text-3xl font-black uppercase text-white/90">Horarios<br /><span class="text-adr-gold">informativos</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<nav aria-label="Navegación interna de horarios" class="border-y border-white/10 bg-adr-gray-dark">
+  <div class="mx-auto flex max-w-7xl flex-wrap gap-x-6 gap-y-2 px-4 py-4 text-sm font-semibold sm:px-6 lg:px-8">
+    <a href="#horarios-publicados" class="text-white/75 hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold">Horarios publicados</a>
+    <a href="#informacion-reservas" class="text-white/75 hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold">Información de reservas</a>
+  </div>
+</nav>
+
+<section id="horarios-publicados" class="bg-adr-gray-dark" aria-labelledby="published-schedules-title">
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+      <div class="max-w-2xl">
+        <p class="text-sm font-bold uppercase tracking-[0.2em] text-adr-gold">Vista semanal</p>
+        <h2 id="published-schedules-title" class="mt-4 text-3xl font-black text-adr-white sm:text-4xl">Horarios por día</h2>
+        <p class="mt-5 text-base leading-7 text-white/70">Los horarios se interpretan en la zona horaria <strong>{{ timezoneLabel }}</strong>. Cuando existan datos aprobados, podrás filtrar por día y nivel.</p>
+      </div>
+      @if (hasPublishedSchedule()) {
+        <button type="button" class="inline-flex w-fit min-h-11 items-center justify-center rounded-md border border-white/20 px-4 py-2 text-sm font-bold text-white/80 transition hover:border-adr-gold hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold" (click)="resetFilters()">
+          Restablecer filtros
+        </button>
+      }
+    </div>
+
+    @if (hasPublishedSchedule()) {
+      <div class="mt-10 grid gap-4 rounded-xl border border-adr-olive/40 bg-adr-black/30 p-4 sm:grid-cols-2 sm:items-end lg:grid-cols-[1fr_1fr_auto]">
+        @if (availableDays().length) {
+          <label class="block" for="schedule-day-filter">
+            <span class="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-adr-gold">Día</span>
+            <select id="schedule-day-filter" class="min-h-11 w-full rounded-md border border-white/15 bg-adr-gray-dark px-3 text-sm text-white focus:border-adr-gold focus:outline-none focus:ring-2 focus:ring-adr-gold/40" (change)="onDayChange($event)">
+              <option value="all">Todos los días</option>
+              @for (day of publishedDays(); track day.id) {
+                <option [value]="day.id">{{ day.label }}</option>
+              }
+            </select>
+          </label>
+        }
+        @if (availableLevels().length) {
+          <label class="block" for="schedule-level-filter">
+            <span class="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-adr-gold">Nivel</span>
+            <select id="schedule-level-filter" class="min-h-11 w-full rounded-md border border-white/15 bg-adr-gray-dark px-3 text-sm text-white focus:border-adr-gold focus:outline-none focus:ring-2 focus:ring-adr-gold/40" (change)="onLevelChange($event)">
+              <option value="all">Todos los niveles</option>
+              @for (level of availableLevels(); track level.id) {
+                <option [value]="level.id">{{ level.label }}</option>
+              }
+            </select>
+          </label>
+        }
+      </div>
+    }
+
+    @if (!hasPublishedSchedule()) {
+      <div class="mt-10 rounded-xl border border-dashed border-adr-olive/50 bg-adr-black/30 p-8 text-center sm:p-12" role="status" aria-labelledby="schedule-empty-title">
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-adr-gold/40 text-2xl text-adr-gold" aria-hidden="true">+</div>
+        <h3 id="schedule-empty-title" class="mt-6 text-2xl font-black text-adr-white sm:text-3xl">{{ page.emptyState.title }}</h3>
+        <p class="mx-auto mt-4 max-w-xl text-sm leading-7 text-white/65">{{ page.emptyState.description }}</p>
+        <div class="mt-8 flex flex-wrap justify-center gap-3">
+          <a routerLink="/contacto" class="inline-flex min-h-11 items-center justify-center rounded-md bg-adr-gold px-5 py-3 text-sm font-bold text-adr-black transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold">Consultar por horarios</a>
+          <a routerLink="/acceso-alumnos" class="inline-flex min-h-11 items-center justify-center rounded-md border border-white/25 px-5 py-3 text-sm font-bold text-adr-white transition hover:border-adr-gold hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold">Acceso alumnos</a>
+        </div>
+      </div>
+    } @if (hasPublishedSchedule() && !hasVisibleSchedule()) {
+      <div class="mt-10 rounded-xl border border-dashed border-adr-olive/50 bg-adr-black/30 p-8 text-center sm:p-12" role="status" aria-labelledby="schedule-filter-empty-title">
+        <h3 id="schedule-filter-empty-title" class="text-2xl font-black text-adr-white sm:text-3xl">Sin resultados para los filtros seleccionados</h3>
+        <p class="mx-auto mt-4 max-w-xl text-sm leading-7 text-white/65">Prueba con otro día o nivel. Los horarios visibles son únicamente los que cuentan con información aprobada.</p>
+        <button type="button" class="mt-8 inline-flex min-h-11 items-center justify-center rounded-md bg-adr-gold px-5 py-3 text-sm font-bold text-adr-black transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold" (click)="resetFilters()">Ver todos los horarios</button>
+      </div>
+    } @if (hasVisibleSchedule()) {
+        <div class="mb-6 hidden lg:block">
+          <table class="w-full border-collapse text-left text-sm">
+            <caption class="sr-only">Horarios informativos agrupados por día</caption>
+            <thead>
+              <tr class="border-b border-white/15 text-xs uppercase tracking-[0.12em] text-adr-gold">
+                <th scope="col" class="pb-4 pr-6">Día</th>
+                <th scope="col" class="pb-4 pr-6">Horario</th>
+                <th scope="col" class="pb-4">Actividad</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (day of visibleDays(); track day.id) {
+                @for (slot of day.slots; track slot.id) {
+                  <tr class="border-b border-white/10 last:border-0">
+                    <th scope="row" class="py-5 pr-6 font-black text-adr-white">{{ day.label }}</th>
+                    <td class="py-5 pr-6 font-semibold text-adr-gold">
+                      <time [attr.datetime]="slot.startsAt">{{ slot.startsAt }}</time>
+                      <span aria-hidden="true">–</span>
+                      <time [attr.datetime]="slot.endsAt">{{ slot.endsAt }}</time>
+                    </td>
+                    <td class="py-5"><app-schedule-slot-card [slot]="slot" [compact]="true" /></td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="space-y-8 lg:hidden">
+          @for (day of visibleDays(); track day.id) {
+            <section [attr.aria-labelledby]="'mobile-day-title-' + day.id" class="rounded-xl border border-adr-olive/40 bg-adr-black/30 p-5">
+              <h3 [id]="'mobile-day-title-' + day.id" class="text-xl font-black text-adr-white">{{ day.label }}</h3>
+              <ul class="mt-4 space-y-4">
+                @for (slot of day.slots; track slot.id) {
+                  <li><app-schedule-slot-card [slot]="slot" /></li>
+                }
+              </ul>
+            </section>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+<section id="informacion-reservas" class="bg-adr-black" aria-labelledby="reservation-info-title">
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <div class="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+      <div>
+        <p class="text-sm font-bold uppercase tracking-[0.2em] text-adr-gold">Información importante</p>
+        <h2 id="reservation-info-title" class="mt-4 text-3xl font-black text-adr-white sm:text-4xl">Horarios informativos</h2>
+        <p class="mt-5 text-base leading-7 text-white/70">{{ page.notice }}</p>
+        <p class="mt-4 text-base leading-7 text-white/70">Las reservas, la gestión de cupos y la disponibilidad se incorporarán posteriormente en el portal privado de alumnos. Esta página no habilita reservas ni confirma plazas.</p>
+      </div>
+      <div class="rounded-xl border border-adr-olive/40 bg-adr-gray-dark/50 p-6 sm:p-8">
+        <p class="text-sm font-bold uppercase tracking-[0.14em] text-adr-gold">Zona horaria</p>
+        <p class="mt-3 text-2xl font-black text-adr-white">{{ timezoneLabel }}</p>
+        <p class="mt-3 text-sm leading-6 text-white/65">Referencia para la interpretación futura de franjas horarias. Los datos publicados se revisarán antes de su difusión.</p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a routerLink="/contacto" class="inline-flex min-h-11 items-center justify-center rounded-md bg-adr-gold px-5 py-3 text-sm font-bold text-adr-black transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold">Contacto</a>
+          <a routerLink="/acceso-alumnos" class="inline-flex min-h-11 items-center justify-center rounded-md border border-white/25 px-5 py-3 text-sm font-bold text-adr-white transition hover:border-adr-gold hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold">Acceso alumnos</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

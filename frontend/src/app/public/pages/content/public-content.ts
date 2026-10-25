@@ -1,8 +1,14 @@
 import type {
+  Activity,
+  ActivitiesPageContent,
   CoachesPageContent,
   CoachProfile,
+  FacilitiesPageContent,
+  GalleryItem,
   GymPageContent,
   HomePageContent,
+  ScheduleDay,
+  SchedulesPageContent,
 } from './public-content.models';
 
 export const homePageContent: HomePageContent = {
@@ -159,3 +165,110 @@ export const coachesPageContent: CoachesPageContent = {
 };
 
 export const coachProfiles: readonly CoachProfile[] = [];
+
+export const facilitiesPageContent: FacilitiesPageContent = {
+  status: 'pending-validation',
+  hero: {
+    status: 'pending-validation',
+    eyebrow: 'Instalaciones · Contenido provisional',
+    title: 'Instalaciones',
+    intro:
+      'Conoce el espacio de entrenamiento de ADR Cross. La descripción de los espacios, el equipamiento y las condiciones de uso se publicará cuando el equipo confirme la información oficial.',
+  },
+  introduction: {
+    title: 'Un espacio por describir con información oficial',
+    description:
+      'Esta página reserva una estructura editable para presentar el box, sus instalaciones y su equipamiento. No se publican medidas, capacidades, servicios ni características técnicas sin validación.',
+  },
+  facilities: [
+    {
+      id: 'training-space',
+      category: 'space',
+      status: 'pending-validation',
+      title: 'Espacio de entrenamiento',
+      description:
+        'La distribución, las medidas, la capacidad y las condiciones de uso del espacio de entrenamiento están pendientes de confirmación oficial.',
+    },
+    {
+      id: 'equipment',
+      category: 'equipment',
+      status: 'pending-validation',
+      title: 'Equipamiento',
+      description:
+        'La relación de máquinas, accesorios y materiales de entrenamiento se incorporará cuando exista un inventario aprobado.',
+    },
+    {
+      id: 'support-spaces',
+      category: 'support',
+      status: 'pending-validation',
+      title: 'Zonas de apoyo',
+      description:
+        'Los espacios complementarios y sus condiciones de uso se describirán únicamente después de su verificación.',
+    },
+  ],
+  features: [
+    {
+      id: 'verified-details',
+      status: 'pending-validation',
+      title: 'Detalles por confirmar',
+      description:
+        'Marcas, cantidades, medidas, accesibilidad y servicios complementarios quedan reservados para contenido oficial verificable.',
+    },
+    {
+      id: 'official-gallery',
+      status: 'pending-validation',
+      title: 'Galería oficial',
+      description:
+        'Las fotografías se publicarán cuando el equipo entregue material autorizado y los textos alternativos sean revisados.',
+    },
+  ],
+  gallery: [],
+  emptyGalleryState: {
+    title: 'Galería oficial pendiente',
+    description:
+      'Todavía no hay fotografías aprobadas para mostrar. Este espacio se mantendrá sin imágenes ficticias hasta recibir material verificado.',
+  },
+};
+
+export const facilityGalleryItems: readonly GalleryItem[] = [];
+
+export const scheduleDays: readonly ScheduleDay[] = [];
+
+export const schedulesPageContent: SchedulesPageContent = {
+  status: 'pending-validation',
+  hero: {
+    status: 'pending-validation',
+    eyebrow: 'Horarios · Contenido informativo',
+    title: 'Horarios',
+    intro:
+      'Consulta la estructura pública de horarios de ADR Cross. Los horarios de clases y actividades se publicarán cuando el equipo confirme días, franjas y niveles.',
+  },
+  timezone: 'America/Asuncion',
+  days: scheduleDays,
+  emptyState: {
+    title: 'Horarios pendientes de publicación',
+    description:
+      'Aún no hay horarios informativos aprobados. La futura publicación será solo consultiva; las reservas se gestionarán, si corresponden, en el portal privado de alumnos.',
+  },
+  notice:
+    'Los horarios publicados en esta página serán informativos. No representan reservas, cupos ni disponibilidad en tiempo real.',
+};
+
+export const activities: readonly Activity[] = [];
+
+export const activitiesPageContent: ActivitiesPageContent = {
+  status: 'pending-validation',
+  hero: {
+    status: 'pending-validation',
+    eyebrow: 'Actividades · Contenido provisional',
+    title: 'Actividades',
+    intro:
+      'Conoce el espacio reservado para competencias y actividades de ADR Cross. Solo se publicarán eventos, fechas, categorías y resultados cuando exista información oficial verificada.',
+  },
+  activities,
+  emptyState: {
+    title: 'Actividades pendientes de confirmar',
+    description:
+      'Todavía no hay eventos próximos ni finalizados aprobados para mostrar. No publicaremos competencias, atletas, resultados ni fechas sin validación.',
+  },
+};
