@@ -43,8 +43,9 @@ describe('Rutas públicas', () => {
     expect(activeLink?.classList.contains('active-nav-link')).toBe(true);
   });
 
-  it('permite navegar mediante los enlaces públicos', async () => {
+  it('permite navegar a las páginas dedicadas de contacto y acceso de alumnos', async () => {
     const harness = await RouterTestingHarness.create('/');
+
     const contactoLink = harness.routeNativeElement?.querySelector(
       'a[href="/contacto"]',
     ) as HTMLAnchorElement | null;
@@ -53,6 +54,12 @@ describe('Rutas públicas', () => {
     await harness.navigateByUrl('/contacto');
     expect(TestBed.inject(Router).url).toBe('/contacto');
     expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toContain('Contacto');
+
+    await harness.navigateByUrl('/acceso-alumnos');
+    expect(TestBed.inject(Router).url).toBe('/acceso-alumnos');
+    expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toContain(
+      'Acceso alumnos',
+    );
   });
 
   it('renderiza la página 404 para rutas desconocidas', async () => {

@@ -1,0 +1,237 @@
+<section class="bg-adr-black" aria-labelledby="contact-title">
+  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+    <nav aria-label="Migas de pan" class="mb-10 text-sm">
+      <ol class="flex flex-wrap items-center gap-2 text-white/60">
+        <li>
+          <a
+            routerLink="/"
+            class="hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold"
+          >
+            Inicio
+          </a>
+        </li>
+        <li aria-hidden="true">/</li>
+        <li class="text-adr-gold" aria-current="page">Contacto</li>
+      </ol>
+    </nav>
+
+    <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+      <div>
+        <p class="text-sm font-bold uppercase tracking-[0.22em] text-adr-gold">
+          {{ page.hero.eyebrow }}
+        </p>
+        <h1 id="contact-title" class="mt-4 text-5xl font-black leading-[0.95] text-adr-white sm:text-6xl lg:text-7xl">
+          {{ page.hero.title }}
+        </h1>
+        <p class="mt-7 max-w-2xl text-base leading-7 text-white/75 sm:text-lg">
+          {{ page.hero.intro }}
+        </p>
+        <div class="mt-7 flex flex-wrap items-center gap-3">
+          <span class="rounded-full border border-adr-gold/40 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-adr-gold">
+            {{ statusLabel(page.status) }}
+          </span>
+          <a
+            routerLink="/horarios"
+            class="inline-flex min-h-11 items-center justify-center rounded-md border border-white/25 px-5 py-3 text-sm font-bold text-adr-white transition hover:border-adr-gold hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold"
+          >
+            Ver horarios
+          </a>
+        </div>
+      </div>
+
+      <div class="relative mx-auto w-full max-w-lg" aria-hidden="true">
+        <div class="contact-visual relative isolate aspect-square overflow-hidden rounded-2xl border border-adr-olive/40 bg-adr-deep shadow-2xl shadow-black/30">
+          <div class="absolute inset-0 bg-[linear-gradient(135deg,rgba(199,162,74,0.14),transparent_42%),repeating-linear-gradient(45deg,rgba(255,255,255,0.035)_0,rgba(255,255,255,0.035)_1px,transparent_1px,transparent_16px)]"></div>
+          <div class="absolute left-8 top-8 h-24 w-24 rounded-full border border-adr-gold/30"></div>
+          <div class="absolute bottom-10 right-8 h-32 w-32 rounded-full border border-adr-olive-mid/35"></div>
+          <div class="absolute inset-x-8 bottom-10 border-t border-adr-gold/50"></div>
+          <div class="absolute bottom-16 left-8">
+            <p class="text-xs font-bold uppercase tracking-[0.22em] text-adr-gold">Vías de comunicación</p>
+            <p class="mt-2 text-3xl font-black uppercase text-white/90">Canales<br /><span class="text-adr-gold">por confirmar</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="canales" class="border-y border-white/10 bg-adr-gray-dark" aria-labelledby="channels-title">
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <div class="max-w-2xl">
+      <p class="text-sm font-bold uppercase tracking-[0.2em] text-adr-gold">Canales de comunicación</p>
+      <h2 id="channels-title" class="mt-4 text-3xl font-black text-adr-white sm:text-4xl">
+        Elige una vía oficial
+      </h2>
+      <p class="mt-5 text-base leading-7 text-white/70">
+        Los canales se activan únicamente después de verificar su destino. Mientras tanto, esta página no publica teléfonos, correos ni enlaces provisionales.
+      </p>
+    </div>
+
+    @if (page.channels.length) {
+      <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        @for (channel of page.channels; track channel.id) {
+          <li class="rounded-xl border border-adr-olive/40 bg-adr-black/40 p-6">
+            <div class="flex items-start justify-between gap-4">
+              <h3 class="text-lg font-black text-adr-white">{{ channel.label }}</h3>
+              <span class="rounded-full border border-adr-gold/35 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-adr-gold">
+                {{ statusLabel(channel.status) }}
+              </span>
+            </div>
+            <p class="mt-3 text-sm leading-6 text-white/65">{{ channel.description }}</p>
+            @if (isVerifiedContactChannel(channel)) {
+              <a
+                [href]="channel.href"
+                [attr.aria-label]="channelLabel(channel.label)"
+                class="mt-6 inline-flex min-h-10 items-center rounded-md bg-adr-gold px-4 py-2 text-sm font-bold text-adr-black transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold"
+              >
+                {{ channel.label }}
+              </a>
+            } @else {
+              <p class="mt-6 text-xs font-semibold uppercase tracking-[0.08em] text-white/45">Destino no publicado</p>
+            }
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="mt-10 rounded-xl border border-dashed border-adr-olive/50 bg-adr-black/30 p-8 text-center sm:p-12" role="status" aria-labelledby="channels-empty-title">
+        <h3 id="channels-empty-title" class="text-2xl font-black text-adr-white">{{ page.emptyState.title }}</h3>
+        <p class="mx-auto mt-4 max-w-xl text-sm leading-7 text-white/65">{{ page.emptyState.description }}</p>
+      </div>
+    }
+  </div>
+</section>
+
+<section id="ubicacion" class="bg-adr-black" aria-labelledby="location-title">
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <div class="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-start">
+      <div>
+        <p class="text-sm font-bold uppercase tracking-[0.2em] text-adr-gold">Dirección y ubicación</p>
+        <h2 id="location-title" class="mt-4 text-3xl font-black text-adr-white sm:text-4xl">
+          Dónde encontrarnos
+        </h2>
+        <p class="mt-5 max-w-2xl text-base leading-7 text-white/70">
+          La dirección y las referencias de acceso se incorporarán cuando el equipo las apruebe. No se añadirán mapas externos sin autorización.
+        </p>
+      </div>
+
+      @if (hasApprovedLocation()) {
+        <address class="rounded-xl border border-adr-olive/40 bg-adr-gray-dark/50 p-6 not-italic sm:p-8">
+          @if (page.location.addressLine1) {
+            <span class="block text-lg font-bold text-adr-white">{{ page.location.addressLine1 }}</span>
+          }
+          @if (page.location.addressLine2) {
+            <span class="block text-white/75">{{ page.location.addressLine2 }}</span>
+          }
+          <span class="mt-3 block text-white/75">
+            {{ page.location.city }}{{ page.location.city && (page.location.department || page.location.postalCode || page.location.country) ? ', ' : '' }}{{ page.location.department }}{{ page.location.postalCode ? ' ' + page.location.postalCode : '' }}{{ page.location.country ? (page.location.department || page.location.postalCode ? ', ' : '') + page.location.country : '' }}
+          </span>
+          @if (page.location.details) {
+            <span class="mt-4 block text-sm leading-6 text-white/65">{{ page.location.details }}</span>
+          }
+        </address>
+      } @else {
+        <div class="rounded-xl border border-dashed border-adr-olive/50 bg-adr-black/30 p-6 sm:p-8" role="status" aria-labelledby="location-empty-title">
+          <h3 id="location-empty-title" class="text-xl font-black text-adr-white">Ubicación pendiente</h3>
+          <p class="mt-3 text-sm leading-6 text-white/65">No hay una dirección oficial aprobada para mostrar.</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section id="horarios-atencion" class="border-y border-white/10 bg-adr-deep" aria-labelledby="hours-title">
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <div class="max-w-2xl">
+      <p class="text-sm font-bold uppercase tracking-[0.2em] text-adr-gold">Atención</p>
+      <h2 id="hours-title" class="mt-4 text-3xl font-black text-adr-white sm:text-4xl">
+        Horarios de atención
+      </h2>
+      <p class="mt-5 text-base leading-7 text-white/70">
+        Los horarios de atención se publicarán después de su aprobación. Los horarios de clases permanecen en su propia sección informativa.
+      </p>
+    </div>
+
+    @if (hasApprovedHours()) {
+      <dl class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        @for (hours of page.supportHours; track hours.id) {
+          <div class="rounded-xl border border-adr-olive/40 bg-adr-black/40 p-6">
+            <dt class="text-sm font-bold uppercase tracking-[0.1em] text-adr-gold">{{ hours.dayRange }}</dt>
+            <dd class="mt-3 text-lg font-black text-adr-white">
+              {{ hours.opensAt }}<span class="text-white/45">–</span>{{ hours.endsAt }}
+            </dd>
+            @if (hours.note) {
+              <dd class="mt-2 text-sm leading-6 text-white/65">{{ hours.note }}</dd>
+            }
+          </div>
+        }
+      </dl>
+    } @else {
+      <div class="mt-10 rounded-xl border border-dashed border-adr-olive/50 bg-adr-black/30 p-8 text-center sm:p-12" role="status" aria-labelledby="hours-empty-title">
+        <h3 id="hours-empty-title" class="text-2xl font-black text-adr-white">Horarios por confirmar</h3>
+        <p class="mx-auto mt-4 max-w-xl text-sm leading-7 text-white/65">No hay horarios de atención aprobados para mostrar.</p>
+      </div>
+    }
+  </div>
+</section>
+
+<section id="redes-sociales" class="border-y border-white/10 bg-adr-gray-dark" aria-labelledby="social-title">
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <div class="max-w-2xl">
+      <p class="text-sm font-bold uppercase tracking-[0.2em] text-adr-gold">Comunidad</p>
+      <h2 id="social-title" class="mt-4 text-3xl font-black text-adr-white sm:text-4xl">
+        Redes sociales oficiales
+      </h2>
+      <p class="mt-5 text-base leading-7 text-white/70">
+        Solo se publicarán perfiles sociales cuyo dominio y destino hayan sido verificados. No se mostrarán cuentas provisionales.
+      </p>
+    </div>
+
+    @if (verifiedSocialProfiles().length) {
+      <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        @for (profile of verifiedSocialProfiles(); track profile.id) {
+          <li class="rounded-xl border border-adr-olive/40 bg-adr-black/40 p-6">
+            <div class="flex items-start justify-between gap-4">
+              <h3 class="text-lg font-black text-adr-white">{{ profile.label }}</h3>
+              <span class="rounded-full border border-adr-gold/35 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-adr-gold">
+                {{ statusLabel(profile.status) }}
+              </span>
+            </div>
+            <a
+              [href]="profile.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-6 inline-flex min-h-10 items-center rounded-md bg-adr-gold px-4 py-2 text-sm font-bold text-adr-black transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold"
+              [attr.aria-label]="profile.label + ' (abre una pestaña nueva)'"
+            >
+              Visitar perfil
+            </a>
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="mt-10 rounded-xl border border-dashed border-adr-olive/50 bg-adr-black/30 p-8 text-center sm:p-12" role="status" aria-labelledby="social-empty-title">
+        <h3 id="social-empty-title" class="text-2xl font-black text-adr-white">Redes pendientes</h3>
+        <p class="mx-auto mt-4 max-w-xl text-sm leading-7 text-white/65">No hay perfiles sociales aprobados para mostrar.</p>
+      </div>
+    }
+  </div>
+</section>
+
+<section id="enlaces-relacionados" class="bg-adr-black" aria-labelledby="related-title">
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+    <div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+      <div class="max-w-2xl">
+        <p class="text-sm font-bold uppercase tracking-[0.2em] text-adr-gold">Información pública</p>
+        <h2 id="related-title" class="mt-4 text-3xl font-black text-adr-white sm:text-4xl">También puedes consultar</h2>
+        <p class="mt-4 text-base leading-7 text-white/70">Estos enlaces internos mantienen la navegación dentro del portal público y no dependen de datos externos.</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a routerLink="/horarios" class="inline-flex min-h-11 items-center justify-center rounded-md border border-white/25 px-5 py-3 text-sm font-bold text-adr-white transition hover:border-adr-gold hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold">Horarios</a>
+        <a routerLink="/instalaciones" class="inline-flex min-h-11 items-center justify-center rounded-md border border-white/25 px-5 py-3 text-sm font-bold text-adr-white transition hover:border-adr-gold hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold">Instalaciones</a>
+        <a routerLink="/acceso-alumnos" class="inline-flex min-h-11 items-center justify-center rounded-md border border-adr-gold/50 px-5 py-3 text-sm font-bold text-adr-gold transition hover:bg-adr-gold hover:text-adr-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold">Acceso alumnos</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+

@@ -3,7 +3,9 @@ import {
   activitiesPageContent,
   coachProfiles,
   coachesPageContent,
+  contactInformation,
   facilitiesPageContent,
+  studentAccessPageContent,
   facilityGalleryItems,
   gymPageContent,
   homePageContent,
@@ -40,6 +42,29 @@ describe('Contenido público tipado', () => {
 
   it('no publica perfiles de entrenadores antes de su aprobación', () => {
     expect(coachProfiles).toEqual([]);
+  });
+
+  it('mantiene los datos de contacto sin destinos operativos inventados', () => {
+    expect(contactInformation.status).toBe('pending-validation');
+    expect(contactInformation.channels.every((channel) => channel.status === 'pending-validation')).toBe(true);
+    expect(contactInformation.channels.every((channel) => !channel.href)).toBe(true);
+    expect(contactInformation.socialProfiles).toEqual([]);
+    expect(contactInformation.location.status).toBe('pending-validation');
+    expect(contactInformation.supportHours).toEqual([]);
+  });
+
+  it('diferencia las funciones planificadas del acceso público disponible', () => {
+    expect(studentAccessPageContent.status).toBe('pending-validation');
+    expect(studentAccessPageContent.features.every((feature) => feature.contentStatus === 'pending-validation')).toBe(true);
+    expect(studentAccessPageContent.features.filter((feature) => feature.availability === 'planned')).toHaveLength(5);
+
+    const helpAndContact = studentAccessPageContent.features.find(
+      (feature) => feature.id === 'help-and-contact',
+    );
+    expect(helpAndContact?.availability).toBe('available');
+    expect(studentAccessPageContent.architecture.safeguards).toContain(
+      'No se ha implementado autenticación en esta entrega.',
+    );
   });
 
   it('define enlaces de portada sin datos operativos inventados', () => {

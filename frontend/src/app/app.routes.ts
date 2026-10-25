@@ -1,19 +1,6 @@
 import { Routes } from '@angular/router';
 import { PublicShellComponent } from './public/layout/public-shell.component';
 
-const infoPages = [
-  {
-    path: 'contacto',
-    title: 'Contacto',
-    description: 'Consulta la sección pública dedicada a los canales de contacto verificados.',
-  },
-  {
-    path: 'acceso-alumnos',
-    title: 'Acceso alumnos',
-    description: 'Conoce el punto de acceso futuro al portal privado de alumnos.',
-  },
-] as const;
-
 export const routes: Routes = [
   {
     path: '',
@@ -73,16 +60,30 @@ export const routes: Routes = [
             (component) => component.ActivitiesPageComponent,
           ),
       },
-      ...infoPages.map((page) => ({
-        path: page.path,
-        title: page.title,
+      {
+        path: 'contacto',
+        title: 'Contacto',
         data: {
-          title: page.title,
-          description: page.description,
+          title: 'Contacto',
+          description: 'Consulta los canales de contacto oficiales cuando hayan sido verificados.',
         },
         loadComponent: () =>
-          import('./public/pages/info/info-page.component').then((component) => component.InfoPageComponent),
-      })),
+          import('./public/pages/contact/contact-page.component').then(
+            (component) => component.ContactPageComponent,
+          ),
+      },
+      {
+        path: 'acceso-alumnos',
+        title: 'Acceso alumnos',
+        data: {
+          title: 'Acceso alumnos',
+          description: 'Conoce el futuro portal privado de alumnos; el acceso aún no está disponible.',
+        },
+        loadComponent: () =>
+          import('./public/pages/student-access/student-access-page.component').then(
+            (component) => component.StudentAccessPageComponent,
+          ),
+      },
       {
         path: 'entrenadores',
         title: 'Entrenadores',

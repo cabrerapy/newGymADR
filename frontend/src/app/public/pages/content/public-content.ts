@@ -3,12 +3,16 @@ import type {
   ActivitiesPageContent,
   CoachesPageContent,
   CoachProfile,
+  ContactChannel,
+  ContactInformation,
   FacilitiesPageContent,
   GalleryItem,
   GymPageContent,
   HomePageContent,
   ScheduleDay,
   SchedulesPageContent,
+  StudentAccessPageContent,
+  StudentPortalFeature,
 } from './public-content.models';
 
 export const homePageContent: HomePageContent = {
@@ -270,5 +274,130 @@ export const activitiesPageContent: ActivitiesPageContent = {
     title: 'Actividades pendientes de confirmar',
     description:
       'Todavía no hay eventos próximos ni finalizados aprobados para mostrar. No publicaremos competencias, atletas, resultados ni fechas sin validación.',
+  },
+};
+
+const contactChannels: readonly ContactChannel[] = [
+  {
+    id: 'phone',
+    type: 'phone',
+    label: 'Teléfono',
+    description: 'Número de atención pendiente de verificación oficial.',
+    status: 'pending-validation',
+  },
+  {
+    id: 'whatsapp',
+    type: 'whatsapp',
+    label: 'WhatsApp',
+    description: 'Canal de WhatsApp pendiente de verificación oficial.',
+    status: 'pending-validation',
+  },
+  {
+    id: 'email',
+    type: 'email',
+    label: 'Correo electrónico',
+    description: 'Dirección de correo pendiente de verificación oficial.',
+    status: 'pending-validation',
+  },
+];
+
+export const contactInformation: ContactInformation = {
+  status: 'pending-validation',
+  hero: {
+    status: 'pending-validation',
+    eyebrow: 'Contacto · Contenido pendiente de validación',
+    title: 'Contacto',
+    intro:
+      'Este espacio reúne las vías de comunicación de ADR Cross. Solo publicaremos teléfonos, WhatsApp, correo, ubicación, horarios y redes sociales cuando el equipo confirme los datos oficiales.',
+  },
+  channels: contactChannels,
+  socialProfiles: [],
+  location: {
+    id: 'adr-cross-main',
+    status: 'pending-validation',
+  },
+  supportHours: [],
+  emptyState: {
+    title: 'Información oficial pendiente',
+    description:
+      'No hay canales, ubicación ni horarios aprobados para mostrar. Estos espacios se mantendrán sin datos provisionales ni enlaces ficticios hasta recibir la información oficial.',
+  },
+};
+
+const studentPortalFeatures: readonly StudentPortalFeature[] = [
+  {
+    id: 'class-bookings',
+    title: 'Reservas de clases',
+    description:
+      'Funcionalidad planificada para consultar y reservar clases desde el área privada. Las reservas no están disponibles en esta página.',
+    contentStatus: 'pending-validation',
+    availability: 'planned',
+  },
+  {
+    id: 'memberships',
+    title: 'Membresías',
+    description:
+      'Funcionalidad planificada para revisar el estado de la membresía. La contratación y administración de membresías no están operativas.',
+    contentStatus: 'pending-validation',
+    availability: 'planned',
+  },
+  {
+    id: 'payments',
+    title: 'Pagos',
+    description:
+      'Funcionalidad planificada para consultar pagos. Esta página no procesa pagos ni solicita datos financieros.',
+    contentStatus: 'pending-validation',
+    availability: 'planned',
+  },
+  {
+    id: 'daily-wod',
+    title: 'WOD del día',
+    description:
+      'Funcionalidad planificada para mostrar el entrenamiento diario a alumnos autenticados. El WOD funcional no está implementado.',
+    contentStatus: 'pending-validation',
+    availability: 'planned',
+  },
+  {
+    id: 'student-profile',
+    title: 'Perfil del alumno',
+    description:
+      'Funcionalidad planificada para administrar datos personales y preferencias dentro del área privada.',
+    contentStatus: 'pending-validation',
+    availability: 'planned',
+  },
+  {
+    id: 'help-and-contact',
+    title: 'Ayuda y contacto',
+    description:
+      'La ayuda privada del portal está planificada. Mientras tanto, los canales públicos de contacto se consultan en la página de Contacto.',
+    contentStatus: 'pending-validation',
+    availability: 'available',
+  },
+];
+
+export const studentAccessPageContent: StudentAccessPageContent = {
+  status: 'pending-validation',
+  hero: {
+    status: 'pending-validation',
+    eyebrow: 'Área de alumnos · Acceso futuro',
+    title: 'Acceso alumnos',
+    intro:
+      'Conoce el futuro portal privado de ADR Cross. Esta página es únicamente informativa: todavía no existe autenticación, reservas, pagos, membresías ni WOD funcional.',
+  },
+  availability: {
+    title: 'Área privada en planificación',
+    description:
+      'Actualmente no hay un portal privado disponible. Cuando el área esté lista, el acceso se realizará mediante un flujo seguro y separado del portal público.',
+  },
+  features: studentPortalFeatures,
+  architecture: {
+    title: 'Preparación para Cognito',
+    description:
+      'La arquitectura prevista contempla Amazon Cognito con Authorization Code y PKCE, un área privada separada lógicamente y rutas privadas con carga lazy.',
+    safeguards: [
+      'No se ha implementado autenticación en esta entrega.',
+      'No se han creado User Pools, clientes AWS ni se ha incorporado un SDK.',
+      'No existe todavía una ruta /portal ni un login ficticio.',
+    ],
   },
 };

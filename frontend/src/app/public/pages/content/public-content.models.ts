@@ -78,6 +78,96 @@ export interface ScheduleDay {
   readonly slots: readonly ScheduleSlot[];
 }
 
+export type ContactChannelType = 'phone' | 'whatsapp' | 'email';
+
+export interface ContactChannel extends EditorialContent {
+  readonly id: string;
+  readonly type: ContactChannelType;
+  readonly label: string;
+  readonly description: string;
+  readonly href?: string;
+}
+
+export type SocialNetwork =
+  | 'instagram'
+  | 'facebook'
+  | 'x'
+  | 'linkedin'
+  | 'youtube'
+  | 'tiktok';
+
+export interface SocialProfile extends EditorialContent {
+  readonly id: string;
+  readonly network: SocialNetwork;
+  readonly label: string;
+  readonly url: string;
+}
+
+export interface BusinessLocation extends EditorialContent {
+  readonly id: string;
+  readonly addressLine1?: string;
+  readonly addressLine2?: string;
+  readonly city?: string;
+  readonly department?: string;
+  readonly postalCode?: string;
+  readonly country?: string;
+  readonly details?: string;
+}
+
+export interface BusinessHours extends EditorialContent {
+  readonly id: string;
+  readonly dayRange: string;
+  readonly opensAt?: string;
+  readonly endsAt?: string;
+  readonly note?: string;
+}
+
+export interface ContactInformation extends EditorialContent {
+  readonly hero: {
+    readonly status: ContentStatus;
+    readonly eyebrow: string;
+    readonly title: string;
+    readonly intro: string;
+  };
+  readonly channels: readonly ContactChannel[];
+  readonly socialProfiles: readonly SocialProfile[];
+  readonly location: BusinessLocation;
+  readonly supportHours: readonly BusinessHours[];
+  readonly emptyState: {
+    readonly title: string;
+    readonly description: string;
+  };
+}
+
+export type StudentPortalFeatureStatus = 'planned' | 'available';
+
+export interface StudentPortalFeature {
+  readonly id: string;
+  readonly title: string;
+  readonly description: string;
+  readonly contentStatus: ContentStatus;
+  readonly availability: StudentPortalFeatureStatus;
+}
+
+export interface StudentAccessPageContent extends EditorialContent {
+  readonly hero: {
+    readonly status: ContentStatus;
+    readonly eyebrow: string;
+    readonly title: string;
+    readonly intro: string;
+  };
+  readonly availability: {
+    readonly title: string;
+    readonly description: string;
+  };
+  readonly features: readonly StudentPortalFeature[];
+  readonly architecture: {
+    readonly title: string;
+    readonly description: string;
+    readonly safeguards: readonly string[];
+  };
+}
+
 export interface ActivityCategory {
   readonly id: string;
   readonly label: string;
