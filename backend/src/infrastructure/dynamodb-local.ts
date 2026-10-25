@@ -1,9 +1,12 @@
 import {
   CreateTableCommand,
   DescribeTableCommand,
+  DescribeTimeToLiveCommand,
   DynamoDBClient,
   type DynamoDBClientConfig,
   type CreateTableCommandInput,
+  type TableDescription,
+  UpdateTimeToLiveCommand,
 } from '@aws-sdk/client-dynamodb';
 
 export interface DynamoDBLocalConfig extends DynamoDBClientConfig {
@@ -11,7 +14,7 @@ export interface DynamoDBLocalConfig extends DynamoDBClientConfig {
 }
 
 export const dynamoDBLocalConfig: DynamoDBLocalConfig = Object.freeze({
-  endpoint: 'http://127.0.0.1:8000',
+  endpoint: 'http://127.0.0.1:8001',
   region: 'us-east-1',
   credentials: {
     accessKeyId: 'local',
@@ -55,6 +58,99 @@ export const localTableDefinition = {
   ],
 } satisfies CreateTableCommandInput;
 
+const localTtlAttribute = 'expiresAt';
+
+function getErrorName(error: unknown): string {
+  if (typeof error !== 'object' || error === null || !('name' in error)) {
+    return '';
+  }
+  return String(error.name);
+}
+
+function assertTableCompatible(table: TableDescription | undefined): void {
+  if (!table) {
+    throw new Error(`La tabla ${localTableDefinition.TableName} no pudo describirse`);
+  }
+
+  const actualAttributes = new Map(
+    (table.AttributeDefinitions ?? []).map((attribute) => [
+      attribute.AttributeName,
+      attribute.AttributeType,
+    ]),
+  );
+  for (const expected of localTableDefinition.AttributeDefinitions) {
+    if (actualAttributes.get(expected.AttributeName) !== expected.AttributeType) {
+      throw new Error(
+        `La tabla tiene una definición incompatible para el atributo ${expected.AttributeName}`,
+      );
+    }
+  }
+
+  const actualKeySchema = (table.KeySchema ?? []).map((key) => [
+    key.AttributeName,
+    key.KeyType,
+  ]);
+  const expectedKeySchema = localTableDefinition.KeySchema.map((key) => [
+    key.AttributeName,
+    key.KeyType,
+  ]);
+  if (JSON.stringify(actualKeySchema) !== JSON.stringify(expectedKeySchema)) {
+    throw new Error('La tabla tiene un esquema PK/SK incompatible con ADR Cross');
+  }
+
+  const actualIndexes = new Map(
+    (table.GlobalSecondaryIndexes ?? []).map((index) => [index.IndexName, index]),
+  );
+  for (const expected of localTableDefinition.GlobalSecondaryIndexes) {
+    const actual = actualIndexes.get(expected.IndexName);
+    if (!actual) {
+      throw new Error(`Falta el GSI local ${expected.IndexName}`);
+    }
+
+    const actualKeySchema = (actual.KeySchema ?? []).map((key) => [
+      key.AttributeName,
+      key.KeyType,
+    ]);
+    const expectedKeySchema = expected.KeySchema.map((key) => [
+      key.AttributeName,
+      key.KeyType,
+    ]);
+    if (
+      JSON.stringify(actualKeySchema) !== JSON.stringify(expectedKeySchema) ||
+      actual.Projection?.ProjectionType !== expected.Projection.ProjectionType ||
+      actual.IndexStatus !== 'ACTIVE'
+    ) {
+      throw new Error(`El GSI local ${expected.IndexName} es incompatible o no está activo`);
+    }
+  }
+}
+
+async function waitForActiveTable(
+  client: DynamoDBClient,
+  timeoutMs = 15_000,
+): Promise<TableDescription> {
+  const deadline = Date.now() + timeoutMs;
+
+  while (Date.now() < deadline) {
+    const description = await client.send(
+      new DescribeTableCommand({ TableName: localTableDefinition.TableName }),
+    );
+    const indexesActive = (description.Table?.GlobalSecondaryIndexes ?? []).every(
+      (index) => index.IndexStatus === 'ACTIVE',
+    );
+
+    if (description.Table?.TableStatus === 'ACTIVE' && indexesActive) {
+      return description.Table;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+
+  throw new Error(
+    `La tabla ${localTableDefinition.TableName} no quedó activa antes del tiempo límite`,
+  );
+}
+
 export function createDynamoDBLocalClient(
   config: DynamoDBLocalConfig = dynamoDBLocalConfig,
 ): DynamoDBClient {
@@ -68,14 +164,44 @@ export async function initializeLocalTable(
     await client.send(new CreateTableCommand(localTableDefinition));
     console.log(`Tabla local ${localTableDefinition.TableName} creada`);
   } catch (error) {
-    if ((error as { name?: string }).name !== 'ResourceInUseException') {
+    if (getErrorName(error) !== 'ResourceInUseException') {
       throw error;
     }
     console.log(`Tabla local ${localTableDefinition.TableName} ya existe`);
   }
 
-  const description = await client.send(
-    new DescribeTableCommand({ TableName: localTableDefinition.TableName }),
+  const table = await waitForActiveTable(client);
+  assertTableCompatible(table);
+
+  const ttl = await client.send(
+    new DescribeTimeToLiveCommand({ TableName: localTableDefinition.TableName }),
   );
-  console.log(`Estado de la tabla local: ${description.Table?.TableStatus ?? 'desconocido'}`);
+  if (ttl.TimeToLiveDescription?.TimeToLiveStatus === 'ENABLED') {
+    if (ttl.TimeToLiveDescription.AttributeName !== localTtlAttribute) {
+      throw new Error(
+        `La tabla usa un atributo TTL incompatible: ${ttl.TimeToLiveDescription.AttributeName}`,
+      );
+    }
+  } else {
+    await client.send(
+      new UpdateTimeToLiveCommand({
+        TableName: localTableDefinition.TableName,
+        TimeToLiveSpecification: {
+          AttributeName: localTtlAttribute,
+          Enabled: true,
+        },
+      }),
+    );
+    const updatedTtl = await client.send(
+      new DescribeTimeToLiveCommand({ TableName: localTableDefinition.TableName }),
+    );
+    if (
+      updatedTtl.TimeToLiveDescription?.TimeToLiveStatus !== 'ENABLED' ||
+      updatedTtl.TimeToLiveDescription.AttributeName !== localTtlAttribute
+    ) {
+      throw new Error('No se pudo habilitar el TTL local esperado');
+    }
+  }
+
+  console.log(`Estado de la tabla local: ${table.TableStatus ?? 'desconocido'}`);
 }

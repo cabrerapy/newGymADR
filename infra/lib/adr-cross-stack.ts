@@ -31,20 +31,20 @@ export class AdrCrossStack extends cdk.Stack {
       },
       timeToLiveAttribute: 'expiresAt',
       removalPolicy: cdk.RemovalPolicy.RETAIN,
-      globalSecondaryIndexes: [
-        {
-          indexName: 'gsi-by-student-day',
-          partitionKey: { name: 'GSI1PK', type: dynamodb.AttributeType.STRING },
-          sortKey: { name: 'GSI1SK', type: dynamodb.AttributeType.STRING },
-          projectionType: dynamodb.ProjectionType.ALL,
-        },
-        {
-          indexName: 'gsi-by-class-date',
-          partitionKey: { name: 'GSI2PK', type: dynamodb.AttributeType.STRING },
-          sortKey: { name: 'GSI2SK', type: dynamodb.AttributeType.STRING },
-          projectionType: dynamodb.ProjectionType.ALL,
-        },
-      ],
+    });
+
+    table.addGlobalSecondaryIndex({
+      indexName: 'gsi-by-student-day',
+      partitionKey: { name: 'GSI1PK', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'GSI1SK', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.ALL,
+    });
+
+    table.addGlobalSecondaryIndex({
+      indexName: 'gsi-by-class-date',
+      partitionKey: { name: 'GSI2PK', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'GSI2SK', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.ALL,
     });
 
     const websiteBucket = new s3.Bucket(this, 'WebsiteBucket', {
@@ -55,20 +55,19 @@ export class AdrCrossStack extends cdk.Stack {
       autoDeleteObjects: false,
     });
 
-    const originAccessControl = new cloudfront.OriginAccessControl(
+    const originAccessControl = new cloudfront.S3OriginAccessControl(
       this,
       'WebsiteOriginAccessControl',
       {
         originAccessControlName: 'adr-cross-website-oac',
         description: 'OAC para el frontend estático de ADR Cross',
-        signingBehavior: cloudfront.OriginAccessControlSigningBehavior.ALWAYS,
-        signingProtocol: cloudfront.OriginAccessControlSigningProtocol.SIGV4,
+        signing: cloudfront.Signing.SIGV4_ALWAYS,
       },
     );
 
     const distribution = new cloudfront.Distribution(this, 'Distribution', {
       defaultBehavior: {
-        origin: new origins.S3Origin(websiteBucket, {
+        origin: origins.S3BucketOrigin.withOriginAccessControl(websiteBucket, {
           originAccessControl,
         }),
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
@@ -196,7 +195,7 @@ export class AdrCrossStack extends cdk.Stack {
     });
 
     new ses.EmailIdentity(this, 'NotificationIdentity', {
-      emailIdentity: 'noreply@example.com',
+      identity: ses.Identity.email('noreply@example.com'),
     });
 
     new cdk.CfnOutput(this, 'ApiEndpoint', {

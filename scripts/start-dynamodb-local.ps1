@@ -1,56 +1,85 @@
 $ErrorActionPreference = 'Stop'
 
-$endpoint = 'http://127.0.0.1:8000'
+$endpoint = 'http://127.0.0.1:8001'
 $composeFile = Join-Path $PSScriptRoot 'docker-compose-dynamodb.yml'
+$containerName = 'adr-cross-dynamodb-local'
 
 function Test-LocalEndpoint {
+  $client = $null
   try {
-    $response = Invoke-WebRequest -Uri "$endpoint/" -TimeoutSec 2 -UseBasicParsing -ErrorAction Stop
-    return $null -ne $response
+    $client = [System.Net.Sockets.TcpClient]::new()
+    $connection = $client.ConnectAsync('127.0.0.1', 8001)
+    $connection.Wait(2000) | Out-Null
+    return $connection.IsCompleted
   } catch {
     return $false
+  } finally {
+    if ($null -ne $client) {
+      $client.Dispose()
+    }
   }
+}
+
+function Test-PortInUse {
+  $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, 8001)
+  try {
+    $listener.Start()
+    return $false
+  } catch {
+    return $true
+  } finally {
+    $listener.Stop()
+  }
+}
+
+$protectedContainers = docker ps -a --format '{{.Names}}' |
+  Where-Object { $_ -like 'lacasadelmaterial*' }
+
+if ($protectedContainers) {
+  Write-Output "Recursos LCM detectados y preservados: $($protectedContainers -join ', ')"
+}
+
+$ownContainerState = docker inspect adr-cross-dynamodb-local --format '{{.State.Running}}' 2>$null
+$ownContainerRunning = $LASTEXITCODE -eq 0 -and $ownContainerState -eq 'true'
+
+if ($ownContainerRunning) {
+  for ($attempt = 1; $attempt -le 30; $attempt++) {
+    if (Test-LocalEndpoint) {
+      Write-Output "DynamoDB Local ya está disponible en $endpoint"
+      exit 0
+    }
+    Start-Sleep -Seconds 1
+  }
+  docker logs --tail 80 adr-cross-dynamodb-local
+  throw "El contenedor ADR Cross está en ejecución, pero no responde en $endpoint."
+}
+
+if (Test-PortInUse) {
+  throw "El puerto 8001 está ocupado por un proceso ajeno; no se inició ningún contenedor."
 }
 
 if (Test-LocalEndpoint) {
-  Write-Output "DynamoDB Local ya está disponible en $endpoint"
-  exit 0
+  throw "El puerto 8001 responde, pero no pertenece al contenedor ADR Cross."
 }
 
-$dockerAvailable = $false
-if (Get-Command docker -ErrorAction SilentlyContinue) {
-  try {
-    $null = docker info --format '{{.ServerVersion}}' 2>&1
-    $dockerAvailable = $LASTEXITCODE -eq 0
-  } catch {
-    $dockerAvailable = $false
-  }
+$dockerInfo = docker info 2>&1
+if ($LASTEXITCODE -ne 0) {
+  throw "Docker daemon no está disponible. Salida: $($dockerInfo -join ' ')"
 }
 
-if ($dockerAvailable) {
-  Write-Output "Iniciando DynamoDB Local mediante Docker Compose..."
-  docker compose -f $composeFile up -d
+Write-Output "Iniciando únicamente $containerName mediante Docker Compose..."
+docker compose -f $composeFile up -d
+if ($LASTEXITCODE -ne 0) {
   exit $LASTEXITCODE
 }
 
-$javaAvailable = $null -ne (Get-Command java -ErrorAction SilentlyContinue)
-$localHome = $env:DYNAMODB_LOCAL_HOME
-
-if ($javaAvailable -and $localHome) {
-  $jarPath = Join-Path $localHome 'DynamoDBLocal.jar'
-  if (Test-Path $jarPath) {
-    Write-Output "Iniciando DynamoDB Local mediante Java..."
-    Start-Process java -ArgumentList @(
-      '"-Djava.library.path=./DynamoDBLocal_lib"'
-      '-jar'
-      $jarPath
-      '-sharedDb'
-      '-dbPath'
-      (Join-Path $localHome 'data')
-    ) -NoNewWindow
+for ($attempt = 1; $attempt -le 30; $attempt++) {
+  if (Test-LocalEndpoint) {
+    Write-Output "DynamoDB Local está disponible en $endpoint"
     exit 0
   }
+  Start-Sleep -Seconds 1
 }
 
-Write-Error "No se pudo iniciar DynamoDB Local: Docker daemon no está disponible y Java/DYNAMODB_LOCAL_HOME no están configurados."
-exit 1
+docker compose -f $composeFile logs --no-color --tail 80
+throw "DynamoDB Local no quedó disponible en $endpoint."

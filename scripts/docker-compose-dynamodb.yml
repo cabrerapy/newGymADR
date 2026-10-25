@@ -1,13 +1,20 @@
+name: adr-cross-dynamodb
+
 services:
   dynamodb-local:
     image: amazon/dynamodb-local:latest
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
     container_name: adr-cross-dynamodb-local
+    # Docker Desktop crea el volumen nuevo con propietario root; DynamoDB Local
+    # necesita escribir shared-local-instance.db en ese volumen.
+    user: "0:0"
+    init: true
     ports:
-      - "8000:8000"
+      - "8001:8000"
     volumes:
       - dynamodb-local-data:/home/dynamodblocal/data
-    working_dir: /home/dynamodblocal/data
+    working_dir: /home/dynamodblocal
 
 volumes:
   dynamodb-local-data:
+    name: adr-cross-dynamodb-local-data

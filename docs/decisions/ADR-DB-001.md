@@ -26,7 +26,7 @@ Los atributos de índice son sparse: solo se proyectan en los ítems que requier
 
 - El modelado debe documentar los patrones de acceso antes de agregar atributos o índices.
 - No se habilitan streams, global tables ni replicación multi-Región sin una decisión posterior.
-- La tabla local usa el mismo esquema lógico, apuntando a DynamoDB Local en `http://localhost:8000`.
+- La tabla local usa el mismo esquema lógico, apuntando a DynamoDB Local en `http://127.0.0.1:8001`.
 - La tabla no se crea en AWS durante NP-002.
 
 ## Pendientes

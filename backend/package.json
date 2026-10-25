@@ -13,6 +13,7 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --import tsx --test tests/*.test.ts",
+    "test:integration:dynamodb:local": "node --import tsx --test tests/dynamodb-local.integration.ts",
     "initialize:dynamodb:local": "tsx scripts/initialize-dynamodb-local.ts"
   },
   "devDependencies": {
