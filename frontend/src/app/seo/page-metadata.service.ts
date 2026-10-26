@@ -15,7 +15,7 @@ interface RouteDataRecord {
 export interface PageSeoData {
   readonly title: string;
   readonly description: string;
-  readonly canonicalPath?: string;
+  readonly canonicalPath?: string | null;
   readonly robots?: string;
 }
 
@@ -104,7 +104,7 @@ export class PageMetadataService {
       : `${normalizedTitle} | ${this.siteName}`;
   }
 
-  private buildCanonicalUrl(canonicalPath: string | undefined): string | null {
+  private buildCanonicalUrl(canonicalPath: string | null | undefined): string | null {
     if (!canonicalPath || !this.baseUrl) {
       return null;
     }
