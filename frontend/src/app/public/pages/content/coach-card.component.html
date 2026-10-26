@@ -5,6 +5,9 @@
       [alt]="coach.photo.alt"
       [width]="coach.photo.width"
       [height]="coach.photo.height"
+      [sizes]="'(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw'"
+      loading="lazy"
+      decoding="async"
       class="h-64 w-full object-cover"
     />
   } @else {

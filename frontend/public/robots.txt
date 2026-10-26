@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /
+
+# El sitemap se publicará únicamente después de confirmar el dominio oficial.
+# En producción, reemplazar esta línea por la URL absoluta verificada:
+# Sitemap: https://<dominio-oficial>/sitemap.xml

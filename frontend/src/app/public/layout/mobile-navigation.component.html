@@ -3,12 +3,13 @@
     id="mobile-navigation"
     role="dialog"
     aria-modal="true"
-    aria-label="Menú móvil"
+    aria-labelledby="mobile-navigation-title"
     class="border-t border-adr-olive/30 bg-adr-deep px-4 py-4 shadow-2xl md:hidden"
     (keydown)="onKeydown($event)"
   >
     <div class="mb-4 flex items-center justify-between">
-      <p class="text-sm font-bold uppercase tracking-[0.18em] text-adr-gold">Navegación</p>
+      <h2 id="mobile-navigation-title" class="sr-only">Menú de navegación móvil</h2>
+      <p class="text-sm font-bold uppercase tracking-[0.18em] text-adr-gold" aria-hidden="true">Navegación</p>
       <button
         #closeButton
         type="button"

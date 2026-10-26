@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -9,6 +10,7 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  inject,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import type { NavigationItem } from './navigation-items';
@@ -22,6 +24,7 @@ import type { NavigationItem } from './navigation-items';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MobileNavigationComponent implements AfterViewInit, OnChanges {
+  private readonly document = inject(DOCUMENT);
   @Input({ required: true }) open = false;
   @Input({ required: true }) navigationItems: readonly NavigationItem[] = [];
   @Output() closeRequested = new EventEmitter<void>();
@@ -52,6 +55,7 @@ export class MobileNavigationComponent implements AfterViewInit, OnChanges {
   protected onKeydown(event: KeyboardEvent): void {
     if (event.key === 'Escape') {
       event.preventDefault();
+      event.stopPropagation();
       this.close();
       return;
     }
@@ -71,11 +75,18 @@ export class MobileNavigationComponent implements AfterViewInit, OnChanges {
 
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
+    const activeElement = this.document.activeElement as HTMLElement | null;
 
-    if (event.shiftKey && document.activeElement === firstElement) {
+    if (!activeElement || !container.contains(activeElement)) {
+      event.preventDefault();
+      firstElement.focus();
+      return;
+    }
+
+    if (event.shiftKey && activeElement === firstElement) {
       event.preventDefault();
       lastElement.focus();
-    } else if (!event.shiftKey && document.activeElement === lastElement) {
+    } else if (!event.shiftKey && activeElement === lastElement) {
       event.preventDefault();
       firstElement.focus();
     }

@@ -9,8 +9,10 @@
         [alt]="item.image.alt"
         [width]="item.image.width"
         [height]="item.image.height"
+        [sizes]="'(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw'"
         [loading]="index === 0 ? 'eager' : 'lazy'"
         [priority]="index === 0"
+        decoding="async"
         class="h-full w-full object-cover"
       />
     </div>

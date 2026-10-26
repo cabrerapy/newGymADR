@@ -24,7 +24,24 @@ body {
     sans-serif;
 }
 
+:focus-visible {
+  outline: 3px solid var(--color-adr-gold);
+  outline-offset: 3px;
+}
+
 ::selection {
   background: #c7a24a;
   color: #0b0d0b;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+

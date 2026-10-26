@@ -9,7 +9,9 @@
         [alt]="activity.image.alt"
         [width]="activity.image.width"
         [height]="activity.image.height"
+        [sizes]="'(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'"
         loading="lazy"
+        decoding="async"
         class="h-full w-full object-cover"
       />
     </div>
