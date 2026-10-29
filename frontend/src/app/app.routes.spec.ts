@@ -62,6 +62,21 @@ describe('Rutas públicas', () => {
     );
   });
 
+  it('renderiza una única estructura de shell público en todas las rutas', async () => {
+    const harness = await RouterTestingHarness.create('/');
+    const routes = [...publicRoutes.map((route) => route.path), '/ruta-inexistente'];
+
+    for (const route of routes) {
+      await harness.navigateByUrl(route);
+
+      expect(document.querySelectorAll('app-public-shell')).toHaveLength(1);
+      expect(document.querySelectorAll('header')).toHaveLength(1);
+      expect(document.querySelectorAll('main')).toHaveLength(1);
+      expect(document.querySelectorAll('footer')).toHaveLength(1);
+      expect(document.querySelectorAll('#mobile-navigation')).toHaveLength(0);
+    }
+  });
+
   it('renderiza la página 404 para rutas desconocidas', async () => {
     const harness = await RouterTestingHarness.create('/ruta-inexistente');
 

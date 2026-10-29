@@ -8,10 +8,10 @@
       </ol>
     </nav>
 
-    <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-      <div>
+    <div class="grid min-w-0 items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+      <div class="min-w-0">
         <p class="text-sm font-bold uppercase tracking-[0.22em] text-adr-gold">{{ page.hero.eyebrow }}</p>
-        <h1 id="facilities-title" class="mt-4 text-5xl font-black leading-[0.95] text-adr-white sm:text-6xl lg:text-7xl">{{ page.hero.title }}</h1>
+        <h1 id="facilities-title" class="mt-4 max-w-full break-words text-5xl font-black leading-[0.95] text-adr-white sm:text-6xl lg:text-7xl">{{ page.hero.title }}</h1>
         <p class="mt-7 max-w-2xl text-base leading-7 text-white/75 sm:text-lg">{{ page.hero.intro }}</p>
         <div class="mt-7 flex flex-wrap items-center gap-3">
           <span class="rounded-full border border-adr-gold/40 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-adr-gold">{{ statusLabel(page.status) }}</span>
@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <div class="relative mx-auto w-full max-w-lg" aria-hidden="true">
+      <div class="relative mx-auto w-full max-w-lg min-w-0" aria-hidden="true">
         <div class="facilities-visual relative isolate aspect-square overflow-hidden rounded-2xl border border-adr-olive/40 bg-adr-deep shadow-2xl shadow-black/30">
           <div class="absolute inset-0 bg-[linear-gradient(135deg,rgba(199,162,74,0.14),transparent_42%),repeating-linear-gradient(45deg,rgba(255,255,255,0.035)_0,rgba(255,255,255,0.035)_1px,transparent_1px,transparent_16px)]"></div>
           <div class="absolute left-8 top-8 h-24 w-24 rounded-full border border-adr-gold/30"></div>

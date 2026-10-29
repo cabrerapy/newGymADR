@@ -117,6 +117,52 @@ describe('SchedulesPageComponent', () => {
     );
   });
 
+  it('filtra las franjas por día y nivel cuando hay datos aprobados', () => {
+    const { fixture: testFixture, nativeElement: testElement } = renderWithPage({
+      ...schedulesPageContent,
+      status: 'approved',
+      days: [
+        {
+          id: 'monday',
+          label: 'Lunes',
+          slots: [makeSlot('monday-initial', 'approved')],
+        } as ScheduleDay,
+        {
+          id: 'tuesday',
+          label: 'Martes',
+          slots: [
+            { ...makeSlot('tuesday-initial', 'approved'), title: 'Clase aprobada', level: { id: 'initial', label: 'Inicial' } },
+            { ...makeSlot('tuesday-advanced', 'approved'), title: 'Clase aprobada', level: { id: 'advanced', label: 'Avanzado' } },
+          ],
+        } as ScheduleDay,
+      ],
+    });
+
+    const dayFilter = testElement.querySelector('#schedule-day-filter') as HTMLSelectElement;
+    dayFilter.value = 'tuesday';
+    dayFilter.dispatchEvent(new Event('change', { bubbles: true }));
+    testFixture.detectChanges();
+
+    let cards = Array.from(
+      testElement.querySelector('table')?.querySelectorAll('app-schedule-slot-card') ?? [],
+    );
+    expect(cards.length).toBe(2);
+    const tableText = testElement.querySelector('table')?.textContent || '';
+    expect(tableText).toContain('Martes');
+    expect(tableText).not.toContain('Lunes');
+
+    const levelFilter = testElement.querySelector('#schedule-level-filter') as HTMLSelectElement;
+    levelFilter.value = 'advanced';
+    levelFilter.dispatchEvent(new Event('change', { bubbles: true }));
+    testFixture.detectChanges();
+
+    cards = Array.from(
+      testElement.querySelector('table')?.querySelectorAll('app-schedule-slot-card') ?? [],
+    );
+    expect(cards.length).toBe(1);
+    expect(cards[0].textContent).toContain('Clase aprobada');
+  });
+
   it('no muestra franjas aprobadas mientras la página esté pendiente de validación', () => {
     const { nativeElement: testElement } = renderWithPage(
       makePage('pending-validation', [makeSlot('approved-slot', 'approved')]),

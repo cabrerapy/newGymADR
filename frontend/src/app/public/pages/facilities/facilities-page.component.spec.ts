@@ -51,5 +51,8 @@ describe('FacilitiesPageComponent', () => {
     expect(classNames).toContain('lg:grid-cols-[1.05fr_0.95fr]');
     expect(classNames).toContain('sm:grid-cols-2');
     expect(classNames).toContain('lg:grid-cols-3');
+    expect(classNames).toContain('min-w-0');
+    expect(classNames).toContain('max-w-full');
+    expect(classNames).toContain('break-words');
   });
 });

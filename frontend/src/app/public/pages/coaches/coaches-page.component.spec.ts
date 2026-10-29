@@ -42,5 +42,8 @@ describe('CoachesPageComponent', () => {
     expect(classNames).toContain('sm:p-12');
     expect(classNames).toContain('lg:px-8');
     expect(classNames).toContain('lg:text-7xl');
+    expect(classNames).toContain('min-w-0');
+    expect(classNames).toContain('max-w-full');
+    expect(classNames).toContain('break-words');
   });
 });

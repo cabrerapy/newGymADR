@@ -24,6 +24,14 @@ describe('SiteHeaderComponent', () => {
     expect(fixture.nativeElement.querySelector('a[href="/acceso-alumnos"]')).toBeTruthy();
   });
 
+  it('usa el breakpoint lg para alternar la navegación móvil y desktop', () => {
+    const nav = fixture.nativeElement.querySelector('nav[aria-label="Navegación principal"]') as HTMLElement;
+    const trigger = fixture.nativeElement.querySelector('#menu-trigger') as HTMLElement;
+
+    expect(nav.className).toContain('lg:flex');
+    expect(trigger.className).toContain('lg:hidden');
+  });
+
   it('abre y cierra el menú móvil con los atributos ARIA correctos', async () => {
     const trigger = fixture.nativeElement.querySelector('#menu-trigger') as HTMLButtonElement;
     trigger.click();

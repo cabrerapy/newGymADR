@@ -24,6 +24,12 @@ describe('MobileNavigationComponent', () => {
     await fixture.whenStable();
   });
 
+  it('oculta el diálogo en el breakpoint lg para usar la navegación desktop', () => {
+    const dialog = fixture.nativeElement.querySelector('[role="dialog"]') as HTMLElement;
+
+    expect(dialog.className).toContain('lg:hidden');
+  });
+
   it('coloca el foco en el control de cierre al abrirse', () => {
     const closeButton = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
     expect(document.activeElement).toBe(closeButton);
