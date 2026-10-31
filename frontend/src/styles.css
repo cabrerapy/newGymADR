@@ -45,3 +45,19 @@ body {
   }
 }
 
+
+a.active-nav-link.bg-adr-gold {
+  color: var(--color-adr-black);
+}
+
+app-facility-card .text-adr-olive-mid {
+  color: var(--color-adr-gold);
+}
+
+:is(a, button):focus-visible {
+  outline-color: var(--color-adr-gold) !important;
+  outline-style: solid !important;
+  outline-width: 3px !important;
+  outline-offset: 3px !important;
+}
+
