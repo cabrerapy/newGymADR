@@ -53,4 +53,21 @@ describe('SiteHeaderComponent', () => {
     expect(fixture.nativeElement.querySelector('#mobile-navigation')).toBeNull();
     expect(document.activeElement).toBe(trigger);
   });
+
+  it('devuelve el foco al disparador al cerrar el diálogo con Escape', async () => {
+    const trigger = fixture.nativeElement.querySelector('#menu-trigger') as HTMLButtonElement;
+    trigger.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const closeButton = fixture.nativeElement.querySelector(
+      '#mobile-navigation button',
+    ) as HTMLButtonElement;
+    closeButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(trigger);
+  });
 });

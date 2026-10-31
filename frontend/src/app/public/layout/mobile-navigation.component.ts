@@ -6,10 +6,12 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  Injector,
   OnChanges,
   Output,
   SimpleChanges,
   ViewChild,
+  afterNextRender,
   inject,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -25,9 +27,10 @@ import type { NavigationItem } from './navigation-items';
 })
 export class MobileNavigationComponent implements AfterViewInit, OnChanges {
   private readonly document = inject(DOCUMENT);
+  private readonly injector = inject(Injector);
   @Input({ required: true }) open = false;
   @Input({ required: true }) navigationItems: readonly NavigationItem[] = [];
-  @Output() closeRequested = new EventEmitter<void>();
+  @Output() closeRequested = new EventEmitter<boolean>();
 
   @ViewChild('closeButton', { static: false })
   private readonly closeButton?: ElementRef<HTMLButtonElement>;
@@ -43,13 +46,22 @@ export class MobileNavigationComponent implements AfterViewInit, OnChanges {
   }
 
   private focusCloseButtonIfNeeded(): void {
-    if (this.open) {
-      queueMicrotask(() => this.closeButton?.nativeElement.focus());
+    if (!this.open) {
+      return;
     }
+
+    afterNextRender(
+      () => {
+        if (this.open) {
+          this.closeButton?.nativeElement.focus();
+        }
+      },
+      { injector: this.injector },
+    );
   }
 
-  protected close(): void {
-    this.closeRequested.emit();
+  protected close(restoreFocus = true): void {
+    this.closeRequested.emit(restoreFocus);
   }
 
   protected onKeydown(event: KeyboardEvent): void {

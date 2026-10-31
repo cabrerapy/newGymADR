@@ -1,7 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { provideRouter } from '@angular/router';
+import { filter, firstValueFrom } from 'rxjs';
+import { appConfig } from './app.config';
 import { routes } from './app.routes';
 
 const publicRoutes = [
@@ -107,5 +109,47 @@ describe('Rutas públicas', () => {
     await harness.navigateByUrl('/entrenadores');
     expect(harness.routeNativeElement?.textContent).toContain('Perfiles pendientes de aprobación');
     expect(harness.routeNativeElement?.querySelector('app-coach-card')).toBeNull();
+  });
+});
+
+describe('Foco post-navegación del menú móvil', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      providers: appConfig.providers,
+      teardown: { destroyAfterEach: true },
+    }).compileComponents();
+  });
+
+  it('enfoca el contenido principal y no recupera el foco del disparador', async () => {
+    const harness = await RouterTestingHarness.create('/');
+    const trigger = document.querySelector('#menu-trigger') as HTMLButtonElement;
+    const mainContent = document.querySelector<HTMLElement>('#contenido-principal');
+
+    trigger.click();
+    harness.detectChanges();
+    await new Promise<void>((resolve) => queueMicrotask(resolve));
+
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    expect(document.querySelector('#mobile-navigation')).toBeTruthy();
+
+    const router = TestBed.inject(Router);
+    const navigationEnd = firstValueFrom(
+      router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd)),
+    );
+
+    const gymLink = Array.from(
+      document.querySelectorAll('#mobile-navigation a[href="/gimnasio"]'),
+    )[0] as HTMLAnchorElement;
+    gymLink.click();
+    harness.detectChanges();
+    await navigationEnd;
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+
+    expect(router.url).toBe('/gimnasio');
+    expect(document.querySelector('#mobile-navigation')).toBeNull();
+    expect(document.activeElement).toBe(mainContent);
+    expect(document.activeElement).not.toBe(trigger);
+    expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toContain('Gimnasio');
   });
 });

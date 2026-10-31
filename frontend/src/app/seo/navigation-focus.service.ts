@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { DestroyRef, Injectable, inject } from '@angular/core';
+import { DestroyRef, Injectable, Injector, afterNextRender, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
@@ -8,6 +8,7 @@ import { filter } from 'rxjs';
 export class NavigationFocusService {
   private readonly destroyRef = inject(DestroyRef);
   private readonly document = inject(DOCUMENT);
+  private readonly injector = inject(Injector);
   private readonly router = inject(Router);
 
   constructor() {
@@ -16,7 +17,9 @@ export class NavigationFocusService {
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(() => queueMicrotask(() => this.focusMainContent()));
+      .subscribe(() => {
+        afterNextRender(() => this.focusMainContent(), { injector: this.injector });
+      });
   }
 
   focusMainContent(): void {

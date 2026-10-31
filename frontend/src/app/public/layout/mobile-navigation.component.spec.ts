@@ -1,6 +1,13 @@
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { MobileNavigationComponent } from './mobile-navigation.component';
+
+@Component({
+  standalone: true,
+  template: '<main id="contenido-principal">Gimnasio</main>',
+})
+class GymTargetComponent {}
 
 describe('MobileNavigationComponent', () => {
   let fixture: ComponentFixture<MobileNavigationComponent>;
@@ -9,7 +16,7 @@ describe('MobileNavigationComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MobileNavigationComponent],
-      providers: [provideRouter([])],
+      providers: [provideRouter([{ path: 'gimnasio', component: GymTargetComponent }])],
       teardown: { destroyAfterEach: true },
     }).compileComponents();
 
@@ -43,6 +50,28 @@ describe('MobileNavigationComponent', () => {
     dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
 
     expect(closed).toBe(true);
+  });
+
+  it('marca el cierre de un enlace como cierre por navegación', () => {
+    let restoreFocus: boolean | undefined;
+    component.closeRequested.subscribe((value) => (restoreFocus = value));
+    const gymLink = Array.from(
+      fixture.nativeElement.querySelectorAll('a[href="/gimnasio"]'),
+    )[0] as HTMLAnchorElement;
+
+    gymLink.click();
+
+    expect(restoreFocus).toBe(false);
+  });
+
+  it('marca el cierre del botón como cierre con restauración de foco', () => {
+    let restoreFocus: boolean | undefined;
+    component.closeRequested.subscribe((value) => (restoreFocus = value));
+    const closeButton = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
+
+    closeButton.click();
+
+    expect(restoreFocus).toBe(true);
   });
 
   it('mantiene el foco dentro del menú con Tab', () => {

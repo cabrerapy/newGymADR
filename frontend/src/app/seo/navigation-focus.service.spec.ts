@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { appConfig } from '../app.config';
 import { NavigationFocusService } from './navigation-focus.service';
 
 @Component({
@@ -39,6 +40,24 @@ describe('NavigationFocusService', () => {
     await new Promise<void>((resolve) => queueMicrotask(resolve));
 
     expect(mainContent).toBeTruthy();
+    expect(document.activeElement).toBe(mainContent);
+  });
+});
+
+describe('inicialización real de NavigationFocusService', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      providers: appConfig.providers,
+      teardown: { destroyAfterEach: true },
+    }).compileComponents();
+  });
+
+  it('suscribe el servicio durante el bootstrap sin inyección manual', async () => {
+    const harness = await RouterTestingHarness.create('/');
+    const mainContent = document.querySelector<HTMLElement>('#contenido-principal');
+
+    expect(mainContent).toBeTruthy();
+    expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toContain('ADR CROSS');
     expect(document.activeElement).toBe(mainContent);
   });
 });

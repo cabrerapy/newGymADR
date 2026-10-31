@@ -1,4 +1,9 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
 import { TitleStrategy, provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { NavigationFocusService } from './seo/navigation-focus.service';
@@ -10,6 +15,9 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
+    provideAppInitializer(() => {
+      inject(NavigationFocusService);
+    }),
     { provide: TitleStrategy, useClass: SeoTitleStrategy },
     { provide: SEO_BASE_URL, useValue: null },
     { provide: SEO_SITE_NAME, useValue: 'ADR Cross' },

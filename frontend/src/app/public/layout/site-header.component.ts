@@ -2,7 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Injector,
   ViewChild,
+  afterNextRender,
+  inject,
   signal,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -21,6 +24,7 @@ import { navigationItems } from './navigation-items';
   },
 })
 export class SiteHeaderComponent {
+  private readonly injector = inject(Injector);
   protected readonly navigationItems = navigationItems;
   protected readonly menuOpen = signal(false);
 
@@ -31,12 +35,23 @@ export class SiteHeaderComponent {
     this.menuOpen.update((isOpen) => !isOpen);
   }
 
-  protected closeMenu(): void {
+  protected closeMenu(restoreFocus = true): void {
     if (!this.menuOpen()) {
       return;
     }
 
     this.menuOpen.set(false);
-    queueMicrotask(() => this.menuTrigger?.nativeElement.focus());
+    if (!restoreFocus) {
+      return;
+    }
+
+    afterNextRender(
+      () => {
+        if (!this.menuOpen()) {
+          this.menuTrigger?.nativeElement.focus();
+        }
+      },
+      { injector: this.injector },
+    );
   }
 }
