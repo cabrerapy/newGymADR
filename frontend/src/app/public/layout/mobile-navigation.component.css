@@ -2,7 +2,7 @@
   display: block;
 }
 
-.active-nav-link {
+.active-nav-link:not(.bg-adr-gold) {
   color: var(--color-adr-gold);
   background-color: rgb(255 255 255 / 0.06);
 }
