@@ -2,7 +2,7 @@
 
 ## Resumen de cierre
 
-NP-002.10 completó el cierre documental de NP-002. NP-003.1, NP-003.2, NP-003.3, NP-003.4A, NP-003.4B, NP-003.5 y las validaciones NP-003.6V.4, NP-003.6V.5 y NP-003.6V.6 están completados en la rama `np-003-public-portal`. El portal público conserva su shell, rutas, SEO, foco de navegación y menú móvil accesible. El build de producción y las 84 pruebas locales están aprobados. La revisión visual humana, la auditoría WCAG 2.2 AA, la validación de datos oficiales, el dominio, el sitemap, la publicación y el despliegue siguen pendientes. No se ha ejecutado ningún despliegue AWS. El presupuesto máximo objetivo se mantiene en **US$ 20 mensuales**.
+NP-002.10 completó el cierre documental de NP-002. NP-003.1, NP-003.2, NP-003.3, NP-003.4A, NP-003.4B, NP-003.5, NP-003.6V, NP-003.7A y NP-003.7B están cerrados técnicamente a nivel local en la rama `np-003-public-portal`. El portal público conserva su shell, rutas, SEO, foco de navegación y menú móvil accesible. El portal privado conserva un scaffold visual no operativo: `/portal` es informativo, las rutas privadas futuras no están registradas y no existen autenticación, autorización, APIs, datos personales ni operaciones de negocio. El build de producción y las 108/108 pruebas locales están aprobados. La revisión visual humana, la auditoría WCAG 2.2 AA, Cognito, la autorización backend, la validación de datos oficiales, el dominio, el sitemap, la publicación y el despliegue siguen pendientes. No se ha ejecutado ningún despliegue AWS. El presupuesto máximo objetivo se mantiene en **US$ 20 mensuales**.
 
 ## Incrementos
 
@@ -28,8 +28,8 @@ NP-002.10 completó el cierre documental de NP-002. NP-003.1, NP-003.2, NP-003.3
 | NP-003.6V.5 | Completado | Corrección del CTA activo Acceso alumnos; contraste texto/fondo de 8.08:1 y contraste del fondo dorado frente al menú de 7.65:1; commit técnico `640fe8a`. |
 | NP-003.6V.6 | Completado | Inicialización de `NavigationFocusService`, foco posterior a `NavigationEnd`, apertura del menú con Enter y Space, Tab/Shift+Tab funcionales, Escape con retorno al disparador y foco en `main` tras navegar desde el menú; commit técnico `e343405`. |
 | NP-003.6 | Cerrado técnicamente | Consolidación pública validada localmente; build de producción y 84/84 pruebas aprobados; no declarado listo para producción. |
-| NP-003.7A | En preparación | Arquitectura, roles, capacidades, rutas futuras y estrategia de seguridad del portal privado documentadas; sin implementación operativa. |
-| NP-003.7B | No iniciado | Diseño visual inicial y componentes provisionales pendientes de autorización e implementación. |
+| NP-003.7A | Cerrado técnicamente | Arquitectura, roles, capacidades, rutas futuras y estrategia de seguridad del portal privado documentadas; sin implementación operativa. |
+| NP-003.7B | Cerrado técnicamente | Scaffold visual privado no operativo, layout responsive/accesible, estados y modelos UI; 108/108 pruebas aprobadas; revisión visual humana pendiente. |
 
 ## Tecnologías y versiones verificadas
 
@@ -51,8 +51,11 @@ NP-002.10 completó el cierre documental de NP-002. NP-003.1, NP-003.2, NP-003.3
 | Historial | Commit funcional de NP-003.4 | Aprobado. `4db53799ae13d8223685612a9bc4c347a3fe4e48` contiene 35 archivos, todos bajo `frontend/`, relacionados con rutas, instalaciones, galería, horarios, actividades, modelos tipados y pruebas. |
 | NP-003.6V.5 | Commit técnico `640fe8a` | Aprobado. El selector `.active-nav-link:not(.bg-adr-gold)` preserva el CTA activo `Acceso alumnos` con texto oscuro sobre fondo dorado; contraste calculado de **8.08:1** y contraste del dorado frente al menú de **7.65:1**. |
 | NP-003.6V.6 | Commit técnico `e343405` | Aprobado. `NavigationFocusService` se inicializa mediante `provideAppInitializer`; el foco posterior a `NavigationEnd` usa `afterNextRender`; el menú soporta Enter/Space, Tab/Shift+Tab, Escape con retorno al disparador y foco en `main` tras navegación. |
-| Frontend | `npm run build` | Aprobado. Build de producción generado en `frontend/dist/frontend`; bundle inicial **309.82 kB** y transferencia estimada **79.06 kB**. |
-| Frontend | `npm test -- --watch=false` | Aprobado. **23 archivos de especificaciones y 84/84 pruebas**; pruebas de rutas 8/8. |
+| Frontend | `npm run build` | Aprobado. Build de producción generado en `frontend/dist/frontend`; bundle inicial **318.51 kB** raw y transferencia estimada **79.99 kB**. |
+| Frontend | `npm test -- --watch=false` | Aprobado. **28 archivos de especificaciones y 108/108 pruebas**; pruebas de rutas 10/10. |
+| NP-003.7B | Rutas y seguridad estructural | Aprobado. `/portal` es una ruta informativa de coincidencia exacta; las cuatro subrutas privadas futuras caen en la 404 pública; no hay login, guards, sesiones, APIs, datos personales ni operaciones de negocio. |
+| NP-003.7B | Contraste estático | Aprobado tras corregir seis templates: el texto pequeño dejó de usar `text-adr-olive-mid` (4.17:1 sobre `#10150F`) y usa `text-adr-gold` (aproximadamente 7.65:1). |
+| NP-003.7B | Ejecución selectiva | No contabilizada. El intento con varios paths no fue soportado por los argumentos de Angular; la suite completa sí aprobó 108/108. |
 | Frontend | CSS de producción | Aprobado. `styles-5AEHUVQ5.css` conserva `a.active-nav-link.bg-adr-gold` con negro `#0b0d0b` sobre dorado `#c7a24a` (contraste aproximado **8.08:1**) y el selector que excluye el CTA dorado del estilo genérico de enlace activo. |
 | Frontend | Metadatos SEO por ruta | Aprobado. Títulos, descripciones, Open Graph/Twitter, `canonicalPath`, robots y limpieza de `og:url` cubiertos por pruebas de `PageMetadataService`. |
 | Frontend | Dominio SEO y 404 | Aprobado. `SEO_BASE_URL = null` no genera canonical ficticio; la ruta comodín usa `noindex, follow` y elimina canonical/`og:url` anteriores. |
@@ -102,19 +105,23 @@ Las 8 funciones `test()` aprobadas son unidades de ejecución; los 10 casos enum
 
 ## Pendientes reales antes de producción
 
-NP-003.6V está cerrado técnicamente a nivel local, pero el portal **no se declara listo para producción**. Quedan estas verificaciones y decisiones reales:
+NP-003.7A y NP-003.7B están cerrados técnicamente a nivel local, pero el portal **no se declara listo para producción ni para uso real**. Quedan estas verificaciones y decisiones reales:
 
 1. Realizar la revisión visual humana en 320, 768 y 1440 px, incluyendo navegación móvil, estados de foco, solapamientos y legibilidad.
-2. Completar una auditoría humana WCAG 2.2 AA con herramientas especializadas; las pruebas unitarias y CDP son evidencia local, no una certificación.
-3. Validar los datos oficiales del gimnasio: horarios, actividades, galería, imágenes, descripción, canales de contacto y redes sociales.
-4. Confirmar el dominio oficial. Mientras no exista, `SEO_BASE_URL` permanece en `null` y no se publican canonical ni `og:url` ficticios.
-5. Generar y validar el sitemap y la URL absoluta verificada.
-6. Definir publicación e indexación; `frontend/public/robots.txt` mantiene `Disallow: /` durante desarrollo.
-7. Revisar las configuraciones provisionales de correo y CORS del baseline antes de un despliegue.
-8. Revisar costos AWS y confirmar que la solución privada cabe en el objetivo máximo de **US$ 20 mensuales**.
-9. Ejecutar un despliegue AWS solamente después de aprobar dominio, contenido, accesibilidad, seguridad, CORS, correo y costos. No se han creado recursos productivos ni se han realizado despliegues AWS.
+2. Completar una auditoría humana WCAG 2.2 AA con herramientas especializadas; las pruebas unitarias y la revisión estática son evidencia local, no una certificación.
+3. Diseñar y aprobar Cognito, los redirect URIs y el flujo Authorization Code con PKCE, `state` y `nonce`.
+4. Implementar una ruta privada segura con sesión verificada por backend y autorización efectiva por capacidad y alcance; no se habilitará mediante guards ficticios ni roles del cliente.
+5. Validar los datos oficiales del gimnasio: horarios, actividades, galería, imágenes, descripción, canales de contacto y redes sociales.
+6. Confirmar el dominio oficial. Mientras no exista, `SEO_BASE_URL` permanece en `null` y no se publican canonical ni `og:url` ficticios.
+7. Generar y validar el sitemap y la URL absoluta verificada.
+8. Definir publicación e indexación; `frontend/public/robots.txt` mantiene `Disallow: /` durante desarrollo.
+9. Revisar las configuraciones provisionales de correo y CORS del baseline antes de un despliegue.
+10. Revisar costos AWS y confirmar que la solución privada cabe en el objetivo máximo de **US$ 20 mensuales**.
+11. Ejecutar un despliegue AWS solamente después de aprobar dominio, contenido, accesibilidad, seguridad, CORS, correo y costos. No se han creado recursos productivos ni se han realizado despliegues AWS.
 
-NP-003.7A queda limitado a arquitectura y documentación; no habilita rutas privadas operativas, autenticación, datos internos ni funciones de negocio.
+NP-003.7A queda limitado a arquitectura y documentación; NP-003.7B queda limitado a presentación visual no operativa. Ninguno habilita rutas privadas operativas, autenticación, datos internos ni funciones de negocio.
+
+El siguiente incremento planificado es **NP-003.7C**; no se ha iniciado en esta consolidación.
 
 En esta tarea no se modificaron backend, infraestructura, DynamoDB ni LCM, y no se accedió ni alteró LCM.
 
@@ -122,22 +129,22 @@ En esta tarea no se modificaron backend, infraestructura, DynamoDB ni LCM, y no 
 
 - Ubicación definitiva del repositorio: `C:\Users\Ever\OneDrive\Escritorio\Git\newGymADR`.
 - Rama actual: `np-003-public-portal`.
-- NP-003.5 y NP-003.6V están cerrados técnicamente; NP-003.7A queda documentado sin implementación operativa.
-- Próximo incremento visual: **NP-003.7B**. No se ha iniciado.
-- Antes de producción se requieren la revisión visual humana, la validación del contenido oficial, el dominio verificado, el sitemap, la publicación e indexación, la auditoría WCAG 2.2 AA, la revisión de correo/CORS y la aprobación de costos/despliegue.
+- NP-003.5, NP-003.6V, NP-003.7A y NP-003.7B están cerrados técnicamente a nivel local; el portal privado sigue sin autenticación ni rutas operativas.
+- Próximo incremento planificado: **NP-003.7C**. No se ha iniciado.
+- Antes de producción se requieren la revisión visual humana, la validación del contenido oficial, el dominio verificado, el sitemap, la publicación e indexación, la auditoría WCAG 2.2 AA, Cognito, la autorización backend, la revisión de correo/CORS y la aprobación de costos/despliegue.
 - No se realizó ningún despliegue AWS.
 
-## Estado Git al cierre de NP-003.6V
+## Estado Git al cierre de NP-003.7B
 
 - Rama: `np-003-public-portal`.
-- HEAD previo a la regularización documental: `e343405e7a97206742803013c833adfe2c8fa58f` (`ajustes del public final`).
-- Commit técnico NP-003.6V.5: `640fe8abec4d5c47e338e3951d51908c5b327c9d`; modifica únicamente `frontend/src/app/public/layout/mobile-navigation.component.css` para excluir el CTA dorado del estilo genérico de enlace activo.
-- Commit técnico NP-003.6V.6: `e343405e7a97206742803013c833adfe2c8fa58f`; incluye la inicialización explícita de `NavigationFocusService`, la coordinación de foco posterior a `NavigationEnd` y las correcciones de accesibilidad del menú móvil.
-- Commit documental de esta regularización: `docs: finalize NP-003.6V public portal closure`; incluye únicamente `docs/PROJECT_STATUS.md`. Su hash es el HEAD posterior al commit y puede verificarse con `git rev-parse HEAD`.
+- HEAD de referencia antes de NP-003.7B: `708f462ec9c67457d56732f6f42da69bc11d1c85`.
+- Commit técnico NP-003.7B: `5523cd62abf36ddd61874a067585adba8de48c29`; mensaje `feat(frontend): scaffold private portal presentation`; incluye exclusivamente `frontend/src/app/app.routes.ts`, `frontend/src/app/app.routes.spec.ts` y `frontend/src/app/portal/`.
+- Commit documental NP-003.7B: `docs: document NP-003.7B private portal presentation`; incluye exclusivamente `docs/architecture/NP-003.7B-private-portal-presentation.md` y `docs/PROJECT_STATUS.md`. Su hash es el HEAD posterior al commit y puede verificarse con `git rev-parse HEAD`.
+- Upstream local conocido: `origin/np-003-public-portal` (`e343405e7a97206742803013c833adfe2c8fa58f`); la rama queda `ahead 4` respecto de ese upstream.
 - Sin push ejecutado.
-- Estado de trabajo antes del commit documental: sin cambios staged ni untracked; únicamente `docs/PROJECT_STATUS.md` modificado.
+- Estado de trabajo antes del commit documental: únicamente los dos documentos autorizados modificados; sin cambios fuera de alcance.
 - `.gitignore` excluye dependencias, builds, `.angular`, `cdk.out`, cobertura, logs, `.env`, certificados y formatos de clave.
-- No se encontraron credenciales reales en archivos rastreados ni en el árbol de trabajo no ignorado.
+- No se encontraron credenciales reales, llamadas a APIs, datos personales ni secretos en los componentes del portal ni en los cambios de esta consolidación.
 - `git diff --check`: aprobado.
 - No se modificaron backend, infraestructura, DynamoDB ni LCM; no se accedió ni alteró LCM.
 - `node_modules`, `dist`, `build`, `.angular`, `cdk.out`, cobertura, logs, secretos y archivos no relacionados quedaron excluidos de los commits.
@@ -171,4 +178,17 @@ En esta tarea no se modificaron backend, infraestructura, DynamoDB ni LCM, y no 
    - Hash: registrado en el HEAD posterior al commit.
    - Mensaje: `docs: complete NP-003.6V.4 accessibility audit`.
    - Alcance: únicamente `docs/PROJECT_STATUS.md`; resultados de contraste, foco, responsive, limitaciones y estado Git.
+   - No se ejecutó push.
+
+6. **NP-003.7B — Scaffold técnico del portal privado**
+   - Hash: `5523cd62abf36ddd61874a067585adba8de48c29`.
+   - Mensaje: `feat(frontend): scaffold private portal presentation`.
+   - Alcance: exclusivamente `frontend/src/app/app.routes.ts`, `frontend/src/app/app.routes.spec.ts` y `frontend/src/app/portal/`.
+   - No se modificaron backend, infraestructura, DynamoDB, LCM ni el portal público.
+   - No se ejecutó push.
+
+7. **NP-003.7B — Cierre documental**
+   - Hash: registrado en el HEAD posterior al commit.
+   - Mensaje: `docs: document NP-003.7B private portal presentation`.
+   - Alcance: únicamente `docs/architecture/NP-003.7B-private-portal-presentation.md` y `docs/PROJECT_STATUS.md`.
    - No se ejecutó push.
