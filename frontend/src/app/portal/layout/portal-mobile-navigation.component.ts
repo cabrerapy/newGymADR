@@ -1,0 +1,113 @@
+import { DOCUMENT } from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Injector,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+  afterNextRender,
+  inject,
+} from '@angular/core';
+import { portalNavigationItems } from '../models/portal-navigation';
+
+@Component({
+  selector: 'app-portal-mobile-navigation',
+  standalone: true,
+  templateUrl: './portal-mobile-navigation.component.html',
+  styleUrl: './portal-mobile-navigation.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(document:keydown.escape)': 'closeFromDocument()',
+  },
+})
+export class PortalMobileNavigationComponent implements AfterViewInit, OnChanges {
+  private readonly document = inject(DOCUMENT);
+  private readonly injector = inject(Injector);
+  @Input({ required: true }) open = false;
+  @Output() closeRequested = new EventEmitter<boolean>();
+  @ViewChild('closeButton', { static: false })
+  private readonly closeButton?: ElementRef<HTMLButtonElement>;
+
+  protected readonly navigationItems = portalNavigationItems;
+
+  ngAfterViewInit(): void {
+    this.focusCloseButtonIfNeeded();
+  }
+
+  ngOnChanges(): void {
+    if (this.open) {
+      this.focusCloseButtonIfNeeded();
+    }
+  }
+
+  private focusCloseButtonIfNeeded(): void {
+    if (!this.open) {
+      return;
+    }
+
+    afterNextRender(
+      () => {
+        if (this.open) {
+          this.closeButton?.nativeElement.focus();
+        }
+      },
+      { injector: this.injector },
+    );
+  }
+
+  protected close(restoreFocus = true): void {
+    this.closeRequested.emit(restoreFocus);
+  }
+
+  protected closeFromDocument(): void {
+    if (this.open) {
+      this.close();
+    }
+  }
+
+  protected onKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.close();
+      return;
+    }
+
+    if (event.key !== 'Tab') {
+      return;
+    }
+
+    const container = event.currentTarget as HTMLElement;
+    const focusableElements = Array.from(
+      container.querySelectorAll<HTMLElement>('button:not([disabled])'),
+    );
+
+    if (focusableElements.length === 0) {
+      return;
+    }
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+    const activeElement = this.document.activeElement as HTMLElement | null;
+
+    if (!activeElement || !container.contains(activeElement)) {
+      event.preventDefault();
+      firstElement.focus();
+      return;
+    }
+
+    if (event.shiftKey && activeElement === firstElement) {
+      event.preventDefault();
+      lastElement.focus();
+    } else if (!event.shiftKey && activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  }
+}

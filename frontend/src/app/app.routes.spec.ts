@@ -110,6 +110,51 @@ describe('Rutas públicas', () => {
     expect(harness.routeNativeElement?.textContent).toContain('Perfiles pendientes de aprobación');
     expect(harness.routeNativeElement?.querySelector('app-coach-card')).toBeNull();
   });
+
+  it('renderiza /portal como pantalla informativa fuera del shell público', async () => {
+    const harness = await RouterTestingHarness.create('/portal');
+    const heading = harness.routeNativeElement?.querySelector('h1')?.textContent;
+
+    expect(TestBed.inject(Router).url).toBe('/portal');
+    expect(heading).toContain('El portal privado de ADR Cross se encuentra en preparación.');
+    expect(document.querySelectorAll('app-public-shell').length).toBe(0);
+    expect(document.querySelectorAll('app-portal-unavailable').length).toBe(1);
+    expect(document.querySelector('form')).toBeNull();
+    expect(document.querySelector('button')).toBeNull();
+    expect(document.querySelectorAll('a[href^="/portal/app"]').length).toBe(0);
+  });
+
+  it('no registra rutas privadas operativas y las subrutas de /portal usan la 404 pública', async () => {
+    const privateRoutes = [
+      '/portal/app/admin',
+      '/portal/app/coach',
+      '/portal/app/student',
+      '/portal/app/community',
+    ];
+
+    const flattenPaths = (routes: readonly { path?: string; children?: readonly { path?: string }[] }[]): string[] =>
+      routes.flatMap((route) => [
+        ...(route.path ? [route.path] : []),
+        ...(route.children ? flattenPaths(route.children) : []),
+      ]);
+
+    const configuredPaths = flattenPaths(routes);
+    expect(configuredPaths).toContain('portal');
+    for (const privatePath of ['portal/app', 'portal/app/admin', 'portal/app/coach', 'portal/app/student', 'portal/app/community']) {
+      expect(configuredPaths).not.toContain(privatePath);
+    }
+
+    const harness = await RouterTestingHarness.create('/');
+    for (const privateRoute of privateRoutes) {
+      await harness.navigateByUrl(privateRoute);
+      expect(TestBed.inject(Router).url).toBe(privateRoute);
+      expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toContain('Página no encontrada');
+      expect(document.querySelector('app-admin-portal-page')).toBeNull();
+      expect(document.querySelector('app-coach-portal-page')).toBeNull();
+      expect(document.querySelector('app-student-portal-page')).toBeNull();
+      expect(document.querySelector('app-community-portal-page')).toBeNull();
+    }
+  });
 });
 
 describe('Foco post-navegación del menú móvil', () => {

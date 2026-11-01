@@ -3,6 +3,22 @@ import { PublicShellComponent } from './public/layout/public-shell.component';
 
 export const routes: Routes = [
   {
+    path: 'portal',
+    pathMatch: 'full',
+    title: 'Portal privado',
+    data: {
+      title: 'Portal privado',
+      description:
+        'El portal privado de ADR Cross se encuentra en preparación; la autenticación y las operaciones privadas aún no están disponibles.',
+      canonicalPath: '/portal',
+      robots: 'noindex, follow',
+    },
+    loadComponent: () =>
+      import('./portal/access/portal-unavailable.component').then(
+        (component) => component.PortalUnavailableComponent,
+      ),
+  },
+  {
     path: '',
     component: PublicShellComponent,
     children: [

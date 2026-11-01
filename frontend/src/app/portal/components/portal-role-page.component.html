@@ -1,0 +1,31 @@
+<section aria-labelledby="portal-role-content-title">
+  <app-portal-breadcrumbs [items]="['Portal privado', role.label]" />
+  <app-portal-page-header
+    [eyebrow]="role.label"
+    [title]="role.label"
+    [description]="role.intro"
+  />
+
+  <div class="mt-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-adr-gold">Estructura visual</p>
+        <h2 id="portal-role-content-title" class="mt-2 text-xl font-black text-adr-white sm:text-2xl">Vistas planificadas</h2>
+      </div>
+      <span class="rounded-full border border-adr-olive/50 bg-adr-deep px-3 py-1.5 text-xs font-semibold text-adr-gold">Sin datos operativos</span>
+    </div>
+
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      @for (area of role.areas; track area.id) {
+        <app-portal-planned-card [area]="area" />
+      }
+    </div>
+
+    <div class="mt-6">
+      <app-portal-empty-state
+        title="Datos no disponibles"
+        description="Esta presentación no consulta APIs ni muestra alumnos, pagos, reservas, membresías, WOD ni información personal."
+      />
+    </div>
+  </div>
+</section>

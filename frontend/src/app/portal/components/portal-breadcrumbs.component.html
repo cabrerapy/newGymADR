@@ -1,0 +1,14 @@
+<nav aria-label="Migas de pan" class="mb-6">
+  <ol class="flex flex-wrap items-center gap-2 text-xs text-white/60">
+    @for (item of items; track item; let last = $last) {
+      <li class="flex items-center gap-2">
+        @if (!$first) {
+          <span aria-hidden="true" class="text-adr-gold">/</span>
+        }
+        <span [class.font-bold]="last" [class.text-adr-gold]="last" [attr.aria-current]="last ? 'page' : null">
+          {{ item }}
+        </span>
+      </li>
+    }
+  </ol>
+</nav>

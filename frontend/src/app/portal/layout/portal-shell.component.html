@@ -1,0 +1,49 @@
+<div class="flex min-h-screen flex-col bg-adr-black text-adr-white">
+  <a
+    href="#portal-contenido-principal"
+    class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-adr-gold focus:px-4 focus:py-2 focus:text-adr-black focus:font-bold"
+  >
+    Saltar al contenido
+  </a>
+
+  <app-portal-header />
+
+  <div class="flex min-h-0 flex-1">
+    <app-portal-sidebar />
+
+    <div class="flex min-w-0 flex-1 flex-col">
+      <div class="flex items-center justify-between gap-3 border-b border-adr-olive/20 bg-adr-deep px-4 py-3 lg:hidden">
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-adr-gold">Portal privado</p>
+        <button
+          #menuTrigger
+          id="portal-menu-trigger"
+          type="button"
+          class="inline-flex lg:hidden min-h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/20 text-adr-white hover:border-adr-gold hover:text-adr-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-adr-gold"
+          [attr.aria-expanded]="mobileNavigationOpen()"
+          aria-controls="portal-mobile-navigation"
+          [attr.aria-label]="mobileNavigationOpen() ? 'Cerrar menú' : 'Abrir menú'"
+          (click)="toggleMobileNavigation()"
+        >
+          <span class="sr-only">{{ mobileNavigationOpen() ? 'Cerrar menú' : 'Abrir menú' }}</span>
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+
+      <app-portal-mobile-navigation
+        [open]="mobileNavigationOpen()"
+        (closeRequested)="closeMobileNavigation($event)"
+      />
+
+      <main
+        id="portal-contenido-principal"
+        class="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8"
+        tabindex="-1"
+        aria-label="Contenido principal del portal privado"
+      >
+        <ng-content />
+      </main>
+    </div>
+  </div>
+</div>

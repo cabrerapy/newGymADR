@@ -1,0 +1,20 @@
+<article
+  class="flex min-h-44 flex-col rounded-xl border border-adr-olive/35 bg-adr-gray-dark/70 p-5 shadow-sm"
+  [attr.aria-labelledby]="'portal-area-title-' + area.id"
+>
+  <div class="flex items-start justify-between gap-4">
+    <h3
+      class="text-base font-bold leading-7 text-adr-white sm:text-lg"
+      [id]="'portal-area-title-' + area.id"
+    >
+      {{ area.title }}
+    </h3>
+    <span class="shrink-0 rounded-full border border-adr-gold/45 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-adr-gold">
+      Planificada
+    </span>
+  </div>
+  <p class="mt-3 text-sm leading-6 text-white/70">{{ area.description }}</p>
+  <p class="mt-auto pt-5 text-xs font-semibold uppercase tracking-[0.12em] text-adr-gold">
+    Sin datos operativos
+  </p>
+</article>
